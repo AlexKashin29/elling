@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Эллинг — операционная система заказа для судостроительной отрасли: трекер, CRM проектных продаж и инженерная база знаний с ИИ. Питч для дизайн-партнёров.">
+<title>Эллинг — питч для дизайн-партнёров</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#070B10; --ink2:#0A101A; --paper:#F1F4F8;
+  --mut:rgba(241,244,248,.55); --dim:rgba(241,244,248,.3); --line:rgba(241,244,248,.11);
+  --org:#FF7A33; --amber:#FFB454; --steel:#38C6E8;
+  --grad:linear-gradient(100deg,var(--org) 0%,var(--steel) 100%);
+  --grad-w:linear-gradient(100deg,var(--org) 0%,var(--amber) 60%,var(--steel) 100%);
+  --font-d:'Onest','Segoe UI',system-ui,sans-serif;
+  --font-b:'Onest','Segoe UI',system-ui,sans-serif;
+  --font-s:'Onest','Segoe UI',system-ui,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-b);background:var(--ink);color:var(--paper);
+  -webkit-font-smoothing:antialiased;overflow:hidden;line-height:1.55;font-size:16px}
+::selection{background:var(--org);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit}
+:focus-visible{outline:2px solid var(--steel);outline-offset:3px}
+.grain{position:fixed;inset:-50%;width:200%;height:200%;pointer-events:none;z-index:60;opacity:.5;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")}
+
+.deck{height:100svh;display:flex;transition:transform .65s var(--ease)}
+.slide{min-width:100vw;height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding:clamp(28px,6vw,90px);position:relative;overflow:hidden}
+.slide::after{content:attr(data-n) ' / 10';position:absolute;bottom:26px;right:clamp(28px,6vw,90px);
+  font-family:var(--font-d);font-size:10px;letter-spacing:.2em;color:var(--dim)}
+.slide .brand{position:absolute;top:26px;left:clamp(28px,6vw,90px);display:flex;gap:10px;align-items:center;
+  font-family:var(--font-d);font-weight:700;font-size:13px}
+.slide .brand i{width:22px;height:22px;border-radius:6px;background:var(--org);display:inline-block}
+.eyebrow{font-size:11px;letter-spacing:.34em;text-transform:uppercase;font-weight:500;
+  color:var(--mut);display:flex;align-items:center;gap:14px;margin-bottom:22px}
+.eyebrow::before{content:'';width:34px;height:1px;background:var(--org);flex-shrink:0}
+h1{font-family:var(--font-d);font-weight:800;font-size:clamp(34px,6.4vw,86px);line-height:1.02;
+  letter-spacing:-.025em;max-width:13em;text-wrap:balance}
+h2{font-family:var(--font-d);font-weight:700;font-size:clamp(26px,4.2vw,54px);line-height:1.06;
+  letter-spacing:-.02em;margin-bottom:26px;max-width:15em;text-wrap:balance}
+.serif{font-family:var(--font-d);font-weight:700;color:var(--amber)}
+.grad-text{color:var(--org)}
+.sub{font-size:clamp(15px,1.5vw,19px);color:var(--mut);max-width:36em}
+.sub b{color:var(--paper)}
+.glow{position:absolute;width:55vw;height:55vw;border-radius:50%;pointer-events:none;filter:blur(30px);
+  background:radial-gradient(circle,rgba(255,122,51,.13),rgba(56,198,232,.06) 50%,transparent 70%)}
+
+.grid{display:grid;gap:14px;margin-top:38px}
+.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+.card{background:var(--ink2);border:1px solid var(--line);border-radius:18px;padding:24px 26px}
+.card h3{font-family:var(--font-d);font-weight:600;font-size:16px;margin-bottom:10px;letter-spacing:-.01em}
+.card p{font-size:13.5px;color:var(--mut)}
+.card p b{color:var(--paper)}
+.card .who{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--org);font-weight:600;display:block;margin-bottom:10px}
+.bignum .v{font-family:var(--font-d);font-weight:800;font-size:clamp(30px,4vw,52px);letter-spacing:-.02em;
+  color:var(--org)}
+.bignum .l{font-size:12.5px;color:var(--mut);margin-top:8px}
+.q{font-family:var(--font-s);font-style:italic;font-weight:500;font-size:clamp(16px,1.8vw,21px);
+  color:var(--paper);line-height:1.5}
+.q small{display:block;font-family:var(--font-b);font-style:normal;font-size:11px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--dim);margin-top:12px}
+.num{font-family:var(--font-d);font-weight:800;font-size:44px;line-height:1;margin-bottom:14px;
+  color:var(--org)}
+ul.dash{list-style:none;margin-top:8px}
+ul.dash li{font-size:13.5px;color:var(--mut);padding:7px 0 7px 20px;position:relative;border-top:1px solid var(--line)}
+ul.dash li::before{content:'—';position:absolute;left:0;color:var(--org)}
+ul.dash li b{color:var(--paper)}
+
+/* flow */
+.flowrow{display:flex;margin-top:44px;overflow-x:auto;padding-bottom:6px}
+.fstep{flex:1;min-width:74px;text-align:center;position:relative}
+.fstep::before{content:'';position:absolute;top:8px;left:0;right:0;height:2px;background:var(--line)}
+.fstep:first-child::before{left:50%}
+.fstep:last-child::before{right:50%}
+.fstep i{position:relative;z-index:1;display:inline-block;width:16px;height:16px;border-radius:50%;
+  background:var(--ink);border:2.5px solid var(--dim)}
+.fstep.d i{background:var(--steel);border-color:var(--steel);box-shadow:0 0 12px rgba(56,198,232,.5)}
+.fstep.c i{background:var(--org);border-color:var(--org);box-shadow:0 0 0 6px rgba(255,122,51,.16),0 0 18px rgba(255,122,51,.6)}
+.fstep span{display:block;font-family:var(--font-d);font-size:8.5px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--mut);margin-top:11px}
+.fstep.goz span{color:var(--org)}
+
+.pill{display:inline-block;font-size:14px;font-weight:700;padding:14px 30px;border-radius:100px;
+  background:var(--org);color:var(--ink);box-shadow:0 8px 32px rgba(255,122,51,.35)}
+.pill.ghost{background:none;border:1px solid var(--line);color:var(--paper);box-shadow:none}
+.pill.ghost:hover{border-color:var(--org)}
+.hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:80;
+  font-family:var(--font-d);font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;
+  display:flex;gap:16px;align-items:center}
+.hint button{border:1px solid var(--line);border-radius:99px;width:34px;height:34px;color:var(--mut);font-size:14px}
+.hint button:hover{border-color:var(--org);color:var(--paper)}
+.dots{position:fixed;top:50%;right:16px;transform:translateY(-50%);z-index:80;display:flex;flex-direction:column;gap:8px}
+.dots i{width:6px;height:6px;border-radius:50%;background:var(--dim);cursor:pointer;transition:.3s}
+.dots i.on{background:var(--org);box-shadow:0 0 10px rgba(255,122,51,.7)}
+table{border-collapse:collapse;width:100%;font-size:13px;margin-top:30px}
+th{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-align:left;
+  padding:10px 14px;border-bottom:1px solid var(--line);font-weight:600}
+td{padding:10px 14px;border-bottom:1px solid var(--line);color:var(--mut);vertical-align:top}
+td:first-child{color:var(--paper);font-weight:600}
+.y{color:#5FD777;font-weight:700}.n{color:#E86A6A;font-weight:700}.p{color:var(--amber);font-weight:700}
+</style>
+</head>
+<body>
+
+<div class="grain" aria-hidden="true"></div>
+<div class="deck" id="deck">
+
+  <!-- 1. Титул -->
+  <section class="slide" data-n="1">
+    <span class="glow" style="top:-25%;right:-15%"></span>
+    <p class="eyebrow">питч для дизайн-партнёров · 2026</p>
+    <h1>эллинг<br><span class="serif grad-text" style="font-size:.6em">здесь строится ваш заказ</span></h1>
+    <p class="sub" style="margin-top:28px">Операционная система заказа для судостроительной отрасли:<br>трекер · CRM проектных продаж · инженерная база знаний с ИИ.</p>
+  </section>
+
+  <!-- 2. Проблема -->
+  <section class="slide" data-n="2">
+    <span class="brand"><i></i>эллинг</span>
+    <p class="eyebrow">проблема</p>
+    <h2>Заказ на 18 млн ₽ живёт в почте, Excel и голове Петровича</h2>
+    <div class="grid g4">
+      <div class="card bignum"><div class="v">30%</div><div class="l">информации теряется на каждом переходе между отделами</div></div>
+      <div class="card bignum"><div class="v">4 часа</div><div class="l">ждёт верфь ответа — а оценка ТЗ занимает недели</div></div>
+      <div class="card bignum"><div class="v">1–2 года</div><div class="l">до тендера решается судьба сделки «закладкой» — её никто не трекает</div></div>
+      <div class="card bignum"><div class="v">−35%</div><div class="l">системное смещение ручных прогнозов выручки</div></div>
+    </div>
+  </section>
+
+  <!-- 3. Голоса -->
+  <section class="slide" data-n="3">
+    <span class="brand"><i></i>эллинг</span>
+    <p class="eyebrow">голоса отрасли · из открытых источников</p>
+    <h2>Мы не придумали эти боли</h2>
+    <div class="grid g2">
+      <div class="card"><p class="q">«Технические задания и чертежи теряются в почтовых ящиках и переписках в мессенджерах»<small>кейс производственной компании · ComNews</small></p></div>
+      <div class="card"><p class="q">«Каждый новый проект — это новое решение, на серию мы так и не вышли»<small>директор центра пропульсивных систем · Корабел.ру</small></p></div>
+      <div class="card"><p class="q">«Менять лист документа, в который не вносится никаких изменений?»<small>инженер-конструктор о ГОСТ 2.503 · forum.ascon.ru</small></p></div>
+      <div class="card"><p class="q">«В его таблице — личная база. Страховка на случай увольнения»<small>о саботаже CRM менеджерами · vc.ru</small></p></div>
+    </div>
+  </section>
+
+  <!-- 4. Инсайт -->
+  <section class="slide" data-n="4">
+    <span class="brand"><i></i>эллинг</span>
+    <span class="glow" style="bottom:-30%;left:-15%"></span>
+    <p class="eyebrow">инсайт</p>
+    <h2>Наш конкурент — <span class="serif grad-text">не Jira.</span><br>Наш конкурент — Excel, почта и телефон</h2>
+    <p class="sub">За 15 лет Jira и 8 лет Яндекс Трекера они не проникли в этот сегмент. Generic-трекер требует, чтобы завод описал себя сам, — это месяцы внедрения с интегратором. Заводы остаются в Excel. <b>Мы приходим с системой, где отрасль уже описана: запуск за день, а не за полгода.</b></p>
+    <table style="max-width:760px">
+      <tr><th></th><th>Jira</th><th>Я.Трекер</th><th>Эллинг</th></tr>
+      <tr><td>Допущен в ОПК / закрытый контур</td><td class="n">✕</td><td class="p">облако</td><td class="y">✓</td></tr>
+      <tr><td>ГОЗ-механика (ВП, ИГК) из коробки</td><td class="n">✕</td><td class="n">✕</td><td class="y">✓</td></tr>
+      <tr><td>CRM проектных продаж + радар закладок</td><td class="n">✕</td><td class="n">✕</td><td class="y">✓</td></tr>
+      <tr><td>Инженерная БЗ: OCR, DWG, ИИ-поиск по ТЗ</td><td class="n">✕</td><td class="n">✕</td><td class="y">✓</td></tr>
+    </table>
+  </section>
+
+  <!-- 5. Решение -->
+  <section class="slide" data-n="5">
+    <span class="brand"><i></i>эллинг</span>
+    <p class="eyebrow">решение</p>
+    <h2>Одна ось заказа — <span class="serif grad-text">все отделы в строю</span></h2>
+    <p class="sub">Продажник видит сделку, инженер — задачи, закупщик — спецификацию, директор — маржу и риск. Все смотрят на один и тот же заказ. <b>Статусные звонки отмирают сами.</b></p>
+    <div class="flowrow">
+      <div class="fstep d"><i></i><span>Тендер</span></div>
+      <div class="fstep d"><i></i><span>Оценка ТЗ</span></div>
+      <div class="fstep d"><i></i><span>КП</span></div>
+      <div class="fstep d goz"><i></i><span>Цена ВП</span></div>
+      <div class="fstep d"><i></i><span>Контракт</span></div>
+      <div class="fstep c"><i></i><span>КД/ОКР</span></div>
+      <div class="fstep"><i></i><span>Произв-во</span></div>
+      <div class="fstep goz"><i></i><span>Приёмка</span></div>
+      <div class="fstep"><i></i><span>Отгрузка</span></div>
+      <div class="fstep"><i></i><span>ПНР</span></div>
+    </div>
+  </section>
+
+  <!-- 6. Продукт -->
+  <section class="slide" data-n="6">
+    <span class="brand"><i></i>эллинг</span>
+    <p class="eyebrow">продукт · MVP уже работает</p>
+    <h2>Три модуля и радар</h2>
+    <div class="grid g3">
+      <div class="card"><div class="num">01</div><h3>Трекер</h3>
+        <ul class="dash"><li>«Сегодня» с одной кнопкой</li><li><b>черновой контур</b> без бюрократии</li><li>извещения из diff версий</li></ul></div>
+      <div class="card"><div class="num">02</div><h3>CRM</h3>
+        <ul class="dash"><li>проекты судов, ИГК, тендеры ЕИС</li><li><b>радар закладок</b>: алерт «позицию заменили»</li><li>честный прогноз из стадий</li></ul></div>
+      <div class="card"><div class="num">03</div><h3>База знаний</h3>
+        <ul class="dash"><li>OCR сканов и штампов</li><li><b>ИИ-поиск аналогов по ТЗ</b></li><li>DWG в браузере, РМРС-сроки</li></ul></div>
+    </div>
+    <div style="margin-top:34px;display:flex;gap:14px;flex-wrap:wrap;align-items:center">
+      <a class="pill" href="https://alexkashin29.github.io/elling-demo/" target="_blank" rel="noopener">Открыть живое демо →</a>
+      <span class="sub" style="margin:0;font-size:13px">работает в браузере, с телефона · без установки</span>
+    </div>
+  </section>
+
+  <!-- 7. Почему сейчас -->
+  <section class="slide" data-n="7">
+    <span class="brand"><i></i>эллинг</span>
+    <p class="eyebrow">почему сейчас</p>
+    <h2>Три волны сошлись в одной точке</h2>
+    <div class="grid g3">
+      <div class="card"><span class="who">рынок</span><h3>~500 судов до 2035</h3><p>Программа обновления флота + балльная локализация ПП 719 гарантируют загрузку ~540 поставщиков СКО — нашей ЦА. СКО — это 35–75% стоимости судна.</p></div>
+      <div class="card"><span class="who">вакуум</span><h3>Jira ушла, слой пуст</h3><p>САПР/PLM (АСКОН, Гольфстрим) закрывают проектирование и производство, 1С — учёт. Но <b>коммерческо-операционного слоя поставщика</b> — CRM проектных продаж + путь заказа + инженерная БЗ — <b>нет ни у одного из них</b>.</p></div>
+      <div class="card"><span class="who">технология</span><h3>ИИ дозрел до архивов</h3><p>Открытые русские LLM + OCR делают 20 лет сканов искомыми — впервые это возможно в закрытом контуре, без облаков.</p></div>
+    </div>
+  </section>
+
+  <!-- 8. Безопасность -->
+  <section class="slide" data-n="8">
+    <span class="brand"><i></i>эллинг</span>
+    <p class="eyebrow">безопасность и совместимость</p>
+    <h2>Спроектирован для отрасли, где безопасность — условие сделки</h2>
+    <div class="grid g4">
+      <div class="card"><h3>Два издания</h3><p>Облако — и коробка в закрытом контуре: Astra Linux, Postgres Pro, офлайн-лицензии.</p></div>
+      <div class="card"><h3>ГОЗ 275-ФЗ</h3><p>ИГК, этапы ВП, дедлайны ЕИС ГОЗ. Раздельный учёт остаётся в вашей 1С.</p></div>
+      <div class="card"><h3>Ваш ландшафт</h3><p>Почтовый шлюз для любого Outlook, обмен с 1С от 6.0 до ERP, импорт Excel за день.</p></div>
+      <div class="card"><h3>Реестр Минцифры</h3><p>Подача в процессе; безопасная разработка по ГОСТ Р 56939-2024, аудит, RBAC-роли.</p></div>
+    </div>
+  </section>
+
+  <!-- 9. Оффер -->
+  <section class="slide" data-n="9">
+    <span class="brand"><i></i>эллинг</span>
+    <span class="glow" style="top:-20%;left:30%"></span>
+    <p class="eyebrow">оффер · только 5 компаний</p>
+    <h2>Дизайн-партнёрство: <span class="serif grad-text">−50% на два года</span></h2>
+    <div class="grid g2" style="max-width:900px">
+      <div class="card"><h3>Вы получаете</h3>
+        <ul class="dash"><li>скидку 50% на 2 года (тариф «Отрасль»: 495 ₽/место)</li><li>внедрение силами нашей команды: импорт ваших Excel, настройка пресета</li><li>прямое влияние на дорожную карту — ваши боли становятся фичами</li></ul></div>
+      <div class="card"><h3>Мы просим</h3>
+        <ul class="dash"><li>час в месяц обратной связи</li><li>доступ к реальным процессам заказа</li><li>право на кейс — по согласованию</li></ul></div>
+    </div>
+    <p class="sub" style="margin-top:26px">Начинаем с часового разговора о ваших процессах — это исследование, не продажа.</p>
+  </section>
+
+  <!-- 10. Контакт -->
+  <section class="slide" data-n="10" style="align-items:center;text-align:center">
+    <span class="glow" style="top:20%;left:25%"></span>
+    <p class="eyebrow" style="justify-content:center">свяжитесь с нами</p>
+    <h1 style="margin-inline:auto">Стройте заказы<br>в <span class="serif grad-text">Эллинге</span></h1>
+    <div style="margin-top:44px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
+      <a class="pill" href="https://t.me/alexanderandrk" target="_blank" rel="noopener">Telegram → @alexanderandrk</a>
+      <a class="pill ghost" href="https://alexkashin29.github.io/elling-demo/" target="_blank" rel="noopener">Открыть демо →</a>
+    </div>
+    <p class="sub" style="margin:26px auto 0">Александр · продукт «Эллинг» · Санкт-Петербург</p>
+  </section>
+
+</div>
+
+<div class="dots" id="dots"></div>
+<div class="hint"><button id="prev" aria-label="Назад">←</button><span>листайте · ← →</span><button id="next" aria-label="Вперёд">→</button></div>
+
+<script>
+const deck = document.getElementById('deck');
+const N = deck.children.length;
+let cur = 0;
+const dots = document.getElementById('dots');
+for(let i=0;i<N;i++){ const d=document.createElement('i'); d.dataset.i=i; dots.appendChild(d); }
+function go(i){
+  cur = Math.max(0, Math.min(N-1, i));
+  deck.style.transform = `translateX(-${cur*100}vw)`;
+  dots.querySelectorAll('i').forEach((d,j)=>d.classList.toggle('on', j===cur));
+}
+document.getElementById('next').onclick = ()=>go(cur+1);
+document.getElementById('prev').onclick = ()=>go(cur-1);
+dots.onclick = e=>{ if(e.target.dataset.i) go(+e.target.dataset.i); };
+addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ') go(cur+1);
+  if(e.key==='ArrowLeft'||e.key==='PageUp') go(cur-1);
+});
+let tx=null;
+addEventListener('touchstart', e=>tx=e.touches[0].clientX, {passive:true});
+addEventListener('touchend', e=>{
+  if(tx===null) return; const dx = e.changedTouches[0].clientX - tx;
+  if(Math.abs(dx)>60) go(cur + (dx<0?1:-1)); tx=null;
+}, {passive:true});
+go(0);
+</script>
+
+</body>
+</html>

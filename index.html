@@ -3,289 +3,466 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="Эллинг — операционная система заказа для судостроительной отрасли: трекер, CRM проектных продаж и инженерная база знаний с ИИ. Питч для дизайн-партнёров.">
-<title>Эллинг — питч для дизайн-партнёров</title>
+<title>Эллинг — здесь строится ваш заказ</title>
+<meta name="description" content="Эллинг — операционная система заказа для судостроительной отрасли: трекер, CRM проектных продаж и инженерная база знаний с ИИ-поиском. Облако и закрытый контур, ГОЗ 275-ФЗ из коробки.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Playfair+Display:ital,wght@1,500;1,600&display=swap" rel="stylesheet">
 <style>
+/* ═════════════ TOKENS — семья Выдох/Datrix, идентичность Эллинга ═════════════ */
 :root{
-  --ink:#070B10; --ink2:#0A101A; --paper:#F1F4F8;
-  --mut:rgba(241,244,248,.55); --dim:rgba(241,244,248,.3); --line:rgba(241,244,248,.11);
-  --org:#FF7A33; --amber:#FFB454; --steel:#38C6E8;
+  --ink:#070B10; --ink2:#0A101A; --ink3:#101823;
+  --paper:#F1F4F8; --mut:rgba(241,244,248,.55); --dim:rgba(241,244,248,.3);
+  --line:rgba(241,244,248,.11);
+  --org:#1D6E93; --amber:#5EC8E0; --steel:#38C6E8;
   --grad:linear-gradient(100deg,var(--org) 0%,var(--steel) 100%);
   --grad-w:linear-gradient(100deg,var(--org) 0%,var(--amber) 60%,var(--steel) 100%);
-  --font-d:'Onest','Segoe UI',system-ui,sans-serif;
-  --font-b:'Onest','Segoe UI',system-ui,sans-serif;
-  --font-s:'Onest','Segoe UI',system-ui,sans-serif;
+  --font-d:'Unbounded','Segoe UI',system-ui,sans-serif;
+  --font-b:'Inter','Segoe UI',system-ui,sans-serif;
+  --font-s:'Playfair Display',Georgia,serif;
+  --gut:clamp(20px,4.5vw,68px);
   --ease:cubic-bezier(.16,1,.3,1);
 }
 *{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{font-family:var(--font-b);background:var(--ink);color:var(--paper);
-  -webkit-font-smoothing:antialiased;overflow:hidden;line-height:1.55;font-size:16px}
+  -webkit-font-smoothing:antialiased;overflow-x:clip;line-height:1.6;font-size:16px}
 ::selection{background:var(--org);color:var(--ink)}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;cursor:pointer;background:none;border:none;color:inherit}
-:focus-visible{outline:2px solid var(--steel);outline-offset:3px}
+:focus-visible{outline:2px solid var(--steel);outline-offset:3px;border-radius:4px}
+.wrap{padding-inline:var(--gut);max-width:1440px;margin-inline:auto}
+.serif{font-family:var(--font-s);font-style:italic;font-weight:600;letter-spacing:-.01em}
+.grad-text{background:var(--grad-w);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.eyebrow{font-size:11px;letter-spacing:.34em;text-transform:uppercase;font-weight:500;
+  color:var(--mut);display:flex;align-items:center;gap:14px}
+.eyebrow::before{content:'';width:34px;height:1px;background:var(--grad);flex-shrink:0}
+
+/* grain */
 .grain{position:fixed;inset:-50%;width:200%;height:200%;pointer-events:none;z-index:60;opacity:.5;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E")}
+@media (prefers-reduced-motion:no-preference){.grain{animation:grainShift 1.2s steps(4) infinite}}
+@keyframes grainShift{0%{transform:translate(0,0)}25%{transform:translate(-2%,1%)}50%{transform:translate(1%,-1%)}75%{transform:translate(-1%,2%)}100%{transform:translate(0,0)}}
 
-.deck{height:100svh;display:flex;transition:transform .65s var(--ease)}
-.slide{min-width:100vw;height:100svh;display:flex;flex-direction:column;justify-content:center;
-  padding:clamp(28px,6vw,90px);position:relative;overflow:hidden}
-.slide::after{content:attr(data-n) ' / 10';position:absolute;bottom:26px;right:clamp(28px,6vw,90px);
-  font-family:var(--font-d);font-size:10px;letter-spacing:.2em;color:var(--dim)}
-.slide .brand{position:absolute;top:26px;left:clamp(28px,6vw,90px);display:flex;gap:10px;align-items:center;
-  font-family:var(--font-d);font-weight:700;font-size:13px}
-.slide .brand i{width:22px;height:22px;border-radius:6px;background:var(--org);display:inline-block}
-.eyebrow{font-size:11px;letter-spacing:.34em;text-transform:uppercase;font-weight:500;
-  color:var(--mut);display:flex;align-items:center;gap:14px;margin-bottom:22px}
-.eyebrow::before{content:'';width:34px;height:1px;background:var(--org);flex-shrink:0}
-h1{font-family:var(--font-d);font-weight:800;font-size:clamp(34px,6.4vw,86px);line-height:1.02;
-  letter-spacing:-.025em;max-width:13em;text-wrap:balance}
-h2{font-family:var(--font-d);font-weight:700;font-size:clamp(26px,4.2vw,54px);line-height:1.06;
-  letter-spacing:-.02em;margin-bottom:26px;max-width:15em;text-wrap:balance}
-.serif{font-family:var(--font-d);font-weight:700;color:var(--amber)}
-.grad-text{color:var(--org)}
-.sub{font-size:clamp(15px,1.5vw,19px);color:var(--mut);max-width:36em}
-.sub b{color:var(--paper)}
-.glow{position:absolute;width:55vw;height:55vw;border-radius:50%;pointer-events:none;filter:blur(30px);
-  background:radial-gradient(circle,rgba(255,122,51,.13),rgba(56,198,232,.06) 50%,transparent 70%)}
+/* loader */
+.loader{position:fixed;inset:0;z-index:200;background:var(--ink);display:flex;
+  align-items:center;justify-content:center;flex-direction:column;gap:18px;
+  transition:transform .9s var(--ease)}
+.loader.done{transform:translateY(-101%)}
+.loader .lword{font-family:var(--font-d);font-weight:800;font-size:clamp(40px,9vw,110px);
+  letter-spacing:-.02em;background:var(--grad-w);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.loader .ltxt{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:var(--mut)}
+@media (prefers-reduced-motion:reduce){.loader{display:none}}
 
-.grid{display:grid;gap:14px;margin-top:38px}
-.g2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-.g3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-.g4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-.card{background:var(--ink2);border:1px solid var(--line);border-radius:18px;padding:24px 26px}
-.card h3{font-family:var(--font-d);font-weight:600;font-size:16px;margin-bottom:10px;letter-spacing:-.01em}
-.card p{font-size:13.5px;color:var(--mut)}
-.card p b{color:var(--paper)}
-.card .who{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--org);font-weight:600;display:block;margin-bottom:10px}
-.bignum .v{font-family:var(--font-d);font-weight:800;font-size:clamp(30px,4vw,52px);letter-spacing:-.02em;
-  color:var(--org)}
-.bignum .l{font-size:12.5px;color:var(--mut);margin-top:8px}
-.q{font-family:var(--font-s);font-style:italic;font-weight:500;font-size:clamp(16px,1.8vw,21px);
-  color:var(--paper);line-height:1.5}
-.q small{display:block;font-family:var(--font-b);font-style:normal;font-size:11px;letter-spacing:.14em;
-  text-transform:uppercase;color:var(--dim);margin-top:12px}
-.num{font-family:var(--font-d);font-weight:800;font-size:44px;line-height:1;margin-bottom:14px;
-  color:var(--org)}
-ul.dash{list-style:none;margin-top:8px}
-ul.dash li{font-size:13.5px;color:var(--mut);padding:7px 0 7px 20px;position:relative;border-top:1px solid var(--line)}
-ul.dash li::before{content:'—';position:absolute;left:0;color:var(--org)}
-ul.dash li b{color:var(--paper)}
+/* nav */
+.nav{position:fixed;top:0;left:0;right:0;z-index:130;display:flex;align-items:center;
+  justify-content:space-between;padding:18px var(--gut);border-bottom:1px solid transparent;
+  transition:background .4s,padding .4s,border-color .4s}
+.nav.scrolled{background:rgba(7,11,16,.68);backdrop-filter:blur(18px) saturate(140%);
+  -webkit-backdrop-filter:blur(18px) saturate(140%);padding-block:12px;border-color:var(--line)}
+.logo{display:flex;align-items:center;gap:11px;font-family:var(--font-d);font-weight:700;font-size:15px}
+.logo .mark{width:30px;height:30px;border-radius:8px;background:var(--grad);position:relative;flex-shrink:0;
+  box-shadow:0 0 24px rgba(29,110,147,.45)}
+.logo .mark::after{content:'';position:absolute;inset:0;border-radius:8px;
+  background:linear-gradient(180deg,transparent 55%,var(--ink) 55%,var(--ink) 70%,transparent 70%)}
+.nav-links{display:flex;gap:32px}
+.nav-links a{font-size:13px;font-weight:500;color:var(--mut);letter-spacing:.04em;position:relative;transition:color .3s}
+.nav-links a::after{content:'';position:absolute;left:0;bottom:-5px;height:1px;width:100%;
+  background:var(--grad);transform:scaleX(0);transform-origin:right;transition:transform .45s var(--ease)}
+.nav-links a:hover{color:var(--paper)}
+.nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
+@media(max-width:820px){.nav-links{display:none}}
+.pill{display:inline-block;font-size:13.5px;font-weight:600;padding:12px 26px;border-radius:100px;
+  border:1px solid rgba(241,244,248,.25);transition:.35s var(--ease);position:relative;overflow:hidden}
+.pill:hover{border-color:rgba(241,244,248,.6);transform:translateY(-1px)}
+.pill.solid{background:var(--grad);border:none;color:var(--ink);font-weight:700;
+  box-shadow:0 8px 32px rgba(29,110,147,.35)}
+.pill.solid:hover{box-shadow:0 12px 42px rgba(56,198,232,.4)}
+.pill.sm{padding:10px 20px;font-size:12.5px}
 
-/* flow */
-.flowrow{display:flex;margin-top:44px;overflow-x:auto;padding-bottom:6px}
-.fstep{flex:1;min-width:74px;text-align:center;position:relative}
+/* reveal */
+.rv{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}}
+
+/* hero */
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;
+  padding-top:110px;padding-bottom:40px;position:relative}
+.hero::before{content:'';position:absolute;top:-20%;right:-15%;width:60vw;height:60vw;
+  background:radial-gradient(circle,rgba(29,110,147,.14) 0%,rgba(56,198,232,.07) 45%,transparent 70%);
+  pointer-events:none;filter:blur(20px)}
+h1{font-family:var(--font-d);font-weight:800;font-size:clamp(42px,7.4vw,104px);
+  line-height:1.02;letter-spacing:-.025em;margin:26px 0 30px;max-width:11em;text-wrap:balance}
+h1 .serif{font-weight:600;font-size:.96em}
+.hero .sub{font-size:clamp(16px,1.6vw,20px);color:var(--mut);max-width:36em;margin-bottom:40px}
+.hero .sub b{color:var(--paper);font-weight:600}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.hero .note{margin-top:22px;font-size:12.5px;color:var(--dim)}
+/* ship hero scene (морской слой; сюда же можно подставить реальное фото — см. .hero-photo) */
+.hero-ship{position:absolute;right:-2%;bottom:6%;width:min(58vw,720px);height:auto;pointer-events:none;z-index:0;
+  opacity:.9;-webkit-mask-image:linear-gradient(90deg,transparent,#000 22%);mask-image:linear-gradient(90deg,transparent,#000 22%)}
+.hero-ship .sea{stroke:var(--steel);stroke-width:1.4;opacity:.5}
+.hero-ship .wave{stroke:var(--steel);stroke-width:1.3;fill:none;opacity:.4}
+.hero-ship .hull{stroke:var(--steel);stroke-width:1.8;fill:rgba(56,198,232,.05)}
+.hero-ship .ln{stroke:var(--steel);stroke-width:1.6;fill:none}
+.hero-ship .glz{fill:rgba(94,200,224,.10);stroke:none}
+.hero>*{position:relative;z-index:1}
+@media(max-width:820px){.hero-ship{opacity:.35;width:92vw;right:-10%;bottom:2%}}
+/* слот под реальное фото корабля: добавь URL и раскомментируй — фото ляжет фоном hero
+   .hero{background:linear-gradient(90deg,var(--ink) 30%,transparent),url('URL_ФОТО') right center/cover no-repeat} */
+
+/* marquee */
+.marquee{border-block:1px solid var(--line);padding-block:16px;overflow:hidden;white-space:nowrap;margin-top:60px}
+.marquee .track{display:inline-block;animation:mq 30s linear infinite}
+@media (prefers-reduced-motion:reduce){.marquee .track{animation:none}}
+@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.marquee span{font-family:var(--font-d);font-weight:600;font-size:13px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--dim);padding-inline:28px}
+.marquee span i{font-style:normal;color:var(--org)}
+
+section{padding-block:clamp(70px,9vw,130px) 0}
+h2{font-family:var(--font-d);font-weight:700;font-size:clamp(28px,3.8vw,52px);
+  letter-spacing:-.02em;line-height:1.1;margin:18px 0 20px;max-width:16em;text-wrap:balance}
+.sec-sub{font-size:16.5px;color:var(--mut);max-width:40em;margin-bottom:44px}
+.sec-sub b{color:var(--paper)}
+
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:1px;background:var(--line);
+  border-block:1px solid var(--line);margin-top:50px}
+.stat{background:var(--ink);padding:34px 28px}
+.stat .v{font-family:var(--font-d);font-weight:800;font-size:clamp(34px,4.4vw,58px);letter-spacing:-.02em;
+  background:var(--grad-w);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.stat .l{font-size:13px;color:var(--mut);margin-top:10px;max-width:24em}
+
+/* pains */
+.pains{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+.pain{background:var(--ink2);border:1px solid var(--line);border-radius:18px;padding:28px;
+  transition:border-color .35s,transform .35s var(--ease)}
+.pain:hover{border-color:rgba(29,110,147,.4);transform:translateY(-3px)}
+.pain .q{font-family:var(--font-s);font-style:italic;font-weight:500;font-size:17.5px;
+  line-height:1.5;color:var(--paper);margin-bottom:16px}
+.pain .a{font-size:13.5px;color:var(--mut)}
+.pain .a b{color:var(--org);font-weight:600}
+
+/* flow strip */
+.flowband{background:var(--ink2);border-block:1px solid var(--line);margin-top:60px;
+  padding:44px var(--gut);overflow-x:auto}
+.flowrow{display:flex;min-width:880px;max-width:1440px;margin-inline:auto}
+.fstep{flex:1;text-align:center;position:relative}
 .fstep::before{content:'';position:absolute;top:8px;left:0;right:0;height:2px;background:var(--line)}
 .fstep:first-child::before{left:50%}
 .fstep:last-child::before{right:50%}
-.fstep i{position:relative;z-index:1;display:inline-block;width:16px;height:16px;border-radius:50%;
+.fstep i{position:relative;z-index:1;display:inline-block;width:17px;height:17px;border-radius:50%;
   background:var(--ink);border:2.5px solid var(--dim)}
-.fstep.d i{background:var(--steel);border-color:var(--steel);box-shadow:0 0 12px rgba(56,198,232,.5)}
-.fstep.c i{background:var(--org);border-color:var(--org);box-shadow:0 0 0 6px rgba(255,122,51,.16),0 0 18px rgba(255,122,51,.6)}
-.fstep span{display:block;font-family:var(--font-d);font-size:8.5px;font-weight:600;letter-spacing:.06em;
-  text-transform:uppercase;color:var(--mut);margin-top:11px}
+.fstep.d i{background:var(--steel);border-color:var(--steel);box-shadow:0 0 14px rgba(56,198,232,.5)}
+.fstep.d::before{background:linear-gradient(90deg,var(--steel),var(--steel))}
+.fstep.c i{background:var(--org);border-color:var(--org);box-shadow:0 0 0 6px rgba(29,110,147,.18),0 0 20px rgba(29,110,147,.6)}
+.fstep span{display:block;font-family:var(--font-d);font-size:9px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--mut);margin-top:12px}
 .fstep.goz span{color:var(--org)}
+.flow-note{text-align:center;font-size:13px;color:var(--dim);margin-top:26px}
 
-.pill{display:inline-block;font-size:14px;font-weight:700;padding:14px 30px;border-radius:100px;
-  background:var(--org);color:var(--ink);box-shadow:0 8px 32px rgba(255,122,51,.35)}
-.pill.ghost{background:none;border:1px solid var(--line);color:var(--paper);box-shadow:none}
-.pill.ghost:hover{border-color:var(--org)}
-.hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:80;
-  font-family:var(--font-d);font-size:10px;letter-spacing:.2em;color:var(--dim);text-transform:uppercase;
-  display:flex;gap:16px;align-items:center}
-.hint button{border:1px solid var(--line);border-radius:99px;width:34px;height:34px;color:var(--mut);font-size:14px}
-.hint button:hover{border-color:var(--org);color:var(--paper)}
-.dots{position:fixed;top:50%;right:16px;transform:translateY(-50%);z-index:80;display:flex;flex-direction:column;gap:8px}
-.dots i{width:6px;height:6px;border-radius:50%;background:var(--dim);cursor:pointer;transition:.3s}
-.dots i.on{background:var(--org);box-shadow:0 0 10px rgba(255,122,51,.7)}
-table{border-collapse:collapse;width:100%;font-size:13px;margin-top:30px}
-th{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);text-align:left;
-  padding:10px 14px;border-bottom:1px solid var(--line);font-weight:600}
-td{padding:10px 14px;border-bottom:1px solid var(--line);color:var(--mut);vertical-align:top}
-td:first-child{color:var(--paper);font-weight:600}
-.y{color:#5FD777;font-weight:700}.n{color:#E86A6A;font-weight:700}.p{color:var(--amber);font-weight:700}
+/* modules */
+.mods{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.mod{background:var(--ink2);border:1px solid var(--line);border-radius:20px;padding:34px 30px;
+  position:relative;overflow:hidden;transition:border-color .35s}
+.mod:hover{border-color:rgba(56,198,232,.35)}
+.mod .num{font-family:var(--font-d);font-weight:800;font-size:52px;line-height:1;
+  background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  opacity:.9;margin-bottom:18px}
+.mod h3{font-family:var(--font-d);font-weight:600;font-size:19px;margin-bottom:12px;letter-spacing:-.01em}
+.mod p{font-size:14px;color:var(--mut);margin-bottom:16px}
+.mod ul{list-style:none}
+.mod li{font-size:13.5px;color:var(--mut);padding:7px 0 7px 22px;position:relative;border-top:1px solid var(--line)}
+.mod li::before{content:'—';position:absolute;left:0;color:var(--org)}
+.mod li b{color:var(--paper);font-weight:600}
+
+/* roles */
+.roles{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.role{border:1px solid var(--line);border-radius:18px;padding:26px;background:var(--ink2)}
+.role .who{font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--org);font-weight:600}
+.role h4{font-family:var(--font-d);font-weight:600;font-size:16px;margin:12px 0 10px;letter-spacing:-.01em}
+.role p{font-size:13.5px;color:var(--mut)}
+.role p b{color:var(--paper)}
+
+/* security */
+.secgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1px;background:var(--line);
+  border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.secitem{background:var(--ink2);padding:28px;font-size:13.5px;color:var(--mut)}
+.secitem b{display:block;font-family:var(--font-d);font-weight:600;font-size:15px;color:var(--paper);margin-bottom:10px}
+
+/* pricing */
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px;align-items:stretch}
+.plan{background:var(--ink2);border:1px solid var(--line);border-radius:22px;padding:34px 30px;
+  display:flex;flex-direction:column;position:relative}
+.plan.hot{background:linear-gradient(var(--ink2),var(--ink2)) padding-box,var(--grad) border-box;
+  border:1.5px solid transparent}
+.plan.hot .tag{position:absolute;top:-12px;left:28px;background:var(--grad);color:var(--ink);
+  font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;border-radius:99px;padding:4px 14px}
+.plan h3{font-family:var(--font-d);font-weight:600;font-size:17px}
+.plan .price{font-family:var(--font-d);font-weight:800;font-size:34px;letter-spacing:-.02em;margin:14px 0 4px}
+.plan .price small{font-size:12.5px;font-weight:500;color:var(--mut);font-family:var(--font-b)}
+.plan ul{list-style:none;margin:18px 0 26px;flex:1}
+.plan li{font-size:13.5px;color:var(--mut);padding:7px 0 7px 22px;position:relative;border-top:1px solid var(--line)}
+.plan li::before{content:'—';position:absolute;left:0;color:var(--steel)}
+
+/* final */
+.final{margin-block:clamp(80px,10vw,140px) 0;text-align:center;position:relative;padding-block:20px}
+.final::before{content:'';position:absolute;inset:-10% -20%;
+  background:radial-gradient(ellipse 60% 60% at 50% 50%,rgba(29,110,147,.12),transparent 70%);pointer-events:none}
+.final h2{max-width:14em;margin-inline:auto}
+.final p{color:var(--mut);max-width:34em;margin:0 auto 36px;font-size:16px}
+.final .note{font-size:12.5px;color:var(--dim);margin-top:20px}
+
+footer{margin-top:clamp(80px,10vw,130px);border-top:1px solid var(--line);
+  padding:34px var(--gut) 46px;font-size:12px;color:var(--dim);line-height:1.8;
+  display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+footer .fbrand{font-family:var(--font-d);font-weight:700;color:var(--mut)}
 </style>
-</head>
-<body>
 
 <div class="grain" aria-hidden="true"></div>
-<div class="deck" id="deck">
 
-  <!-- 1. Титул -->
-  <section class="slide" data-n="1">
-    <span class="glow" style="top:-25%;right:-15%"></span>
-    <p class="eyebrow">питч для дизайн-партнёров · 2026</p>
-    <h1>эллинг<br><span class="serif grad-text" style="font-size:.6em">здесь строится ваш заказ</span></h1>
-    <p class="sub" style="margin-top:28px">Операционная система заказа для судостроительной отрасли:<br>трекер · CRM проектных продаж · инженерная база знаний с ИИ.</p>
-  </section>
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="lword">эллинг</div>
+  <div class="ltxt">здесь строится ваш заказ</div>
+</div>
 
-  <!-- 2. Проблема -->
-  <section class="slide" data-n="2">
-    <span class="brand"><i></i>эллинг</span>
-    <p class="eyebrow">проблема</p>
-    <h2>Заказ на 18 млн ₽ живёт в почте, Excel и голове Петровича</h2>
-    <div class="grid g4">
-      <div class="card bignum"><div class="v">30%</div><div class="l">информации теряется на каждом переходе между отделами</div></div>
-      <div class="card bignum"><div class="v">4 часа</div><div class="l">ждёт верфь ответа — а оценка ТЗ занимает недели</div></div>
-      <div class="card bignum"><div class="v">1–2 года</div><div class="l">до тендера решается судьба сделки «закладкой» — её никто не трекает</div></div>
-      <div class="card bignum"><div class="v">−35%</div><div class="l">системное смещение ручных прогнозов выручки</div></div>
-    </div>
-  </section>
+<nav class="nav" id="nav">
+  <span class="logo"><span class="mark"></span>эллинг</span>
+  <span class="nav-links">
+    <a href="#pains">Боли</a>
+    <a href="#product">Продукт</a>
+    <a href="#roles">Кому</a>
+    <a href="#security">Безопасность</a>
+    <a href="#pricing">Тарифы</a>
+  </span>
+  <a class="pill sm solid" href="#cta">Стать дизайн-партнёром</a>
+</nav>
 
-  <!-- 3. Голоса -->
-  <section class="slide" data-n="3">
-    <span class="brand"><i></i>эллинг</span>
-    <p class="eyebrow">голоса отрасли · из открытых источников</p>
-    <h2>Мы не придумали эти боли</h2>
-    <div class="grid g2">
-      <div class="card"><p class="q">«Технические задания и чертежи теряются в почтовых ящиках и переписках в мессенджерах»<small>кейс производственной компании · ComNews</small></p></div>
-      <div class="card"><p class="q">«Каждый новый проект — это новое решение, на серию мы так и не вышли»<small>директор центра пропульсивных систем · Корабел.ру</small></p></div>
-      <div class="card"><p class="q">«Менять лист документа, в который не вносится никаких изменений?»<small>инженер-конструктор о ГОСТ 2.503 · forum.ascon.ru</small></p></div>
-      <div class="card"><p class="q">«В его таблице — личная база. Страховка на случай увольнения»<small>о саботаже CRM менеджерами · vc.ru</small></p></div>
-    </div>
-  </section>
+<header class="hero wrap">
+  <p class="eyebrow rv">для поставщиков ско · судовых агентов · пкб</p>
+  <h1 class="rv">Здесь <span class="serif grad-text">строится</span><br>ваш заказ</h1>
+  <p class="sub rv">Эллинг — операционная система заказа для судостроительной отрасли: трекер, CRM проектных продаж и инженерная база знаний с ИИ-поиском. <b>В одной системе, где отрасль уже описана</b> — от тендера и цены ВП до отгрузки на верфь.</p>
+  <div class="cta-row rv">
+    <a class="pill solid" href="https://alexkashin29.github.io/elling-demo/" target="_blank" rel="noopener">Открыть живое демо →</a>
+    <a class="pill" href="#cta">Стать дизайн-партнёром</a>
+  </div>
+  <p class="note rv">Запуск за день: пресеты «Производитель СКО / Судовой агент / ПКБ» + импорт ваших Excel-реестров.</p>
+  <svg class="hero-ship" viewBox="0 0 620 260" fill="none" aria-hidden="true" stroke-linecap="round" stroke-linejoin="round">
+    <path class="hull glz" d="M70 168 H492 L458 214 a16 16 0 0 1 -12 6 H132 a30 30 0 0 1 -27 -18 Z"/>
+    <path class="ln" d="M138 168 V104 H228 V168"/>
+    <path class="ln" d="M160 104 V74 H210 V104"/>
+    <path class="ln" d="M218 74 V56 H236 V74"/>
+    <path class="ln" d="M262 168 V120 H452 L476 168"/>
+    <path class="ln" d="M278 168 V128 H318 V168 M278 148 H318"/>
+    <path class="ln" d="M330 168 V128 H370 V168 M330 148 H370"/>
+    <path class="ln" d="M382 168 V128 H422 V168 M382 148 H422"/>
+    <path class="ln" d="M182 74 V40 M182 47 H214"/>
+    <path class="sea" d="M20 220 H600"/>
+    <path class="wave" d="M40 234 q18 -9 36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0"/>
+  </svg>
+</header>
 
-  <!-- 4. Инсайт -->
-  <section class="slide" data-n="4">
-    <span class="brand"><i></i>эллинг</span>
-    <span class="glow" style="bottom:-30%;left:-15%"></span>
-    <p class="eyebrow">инсайт</p>
-    <h2>Наш конкурент — <span class="serif grad-text">не Jira.</span><br>Наш конкурент — Excel, почта и телефон</h2>
-    <p class="sub">За 15 лет Jira и 8 лет Яндекс Трекера они не проникли в этот сегмент. Generic-трекер требует, чтобы завод описал себя сам, — это месяцы внедрения с интегратором. Заводы остаются в Excel. <b>Мы приходим с системой, где отрасль уже описана: запуск за день, а не за полгода.</b></p>
-    <table style="max-width:760px">
-      <tr><th></th><th>Jira</th><th>Я.Трекер</th><th>Эллинг</th></tr>
-      <tr><td>Допущен в ОПК / закрытый контур</td><td class="n">✕</td><td class="p">облако</td><td class="y">✓</td></tr>
-      <tr><td>ГОЗ-механика (ВП, ИГК) из коробки</td><td class="n">✕</td><td class="n">✕</td><td class="y">✓</td></tr>
-      <tr><td>CRM проектных продаж + радар закладок</td><td class="n">✕</td><td class="n">✕</td><td class="y">✓</td></tr>
-      <tr><td>Инженерная БЗ: OCR, DWG, ИИ-поиск по ТЗ</td><td class="n">✕</td><td class="n">✕</td><td class="y">✓</td></tr>
-    </table>
-  </section>
+<div class="marquee" aria-hidden="true"><div class="track" id="mq">
+  <span>Трекер <i>·</i></span><span>CRM проектных продаж <i>·</i></span><span>Инженерная база знаний <i>·</i></span><span>ИИ-поиск аналогов по ТЗ <i>·</i></span><span>Радар закладок <i>·</i></span><span>ГОЗ 275-ФЗ из коробки <i>·</i></span><span>Облако и закрытый контур <i>·</i></span><span>Astra Linux · Postgres Pro <i>·</i></span>
+</div></div>
 
-  <!-- 5. Решение -->
-  <section class="slide" data-n="5">
-    <span class="brand"><i></i>эллинг</span>
-    <p class="eyebrow">решение</p>
-    <h2>Одна ось заказа — <span class="serif grad-text">все отделы в строю</span></h2>
-    <p class="sub">Продажник видит сделку, инженер — задачи, закупщик — спецификацию, директор — маржу и риск. Все смотрят на один и тот же заказ. <b>Статусные звонки отмирают сами.</b></p>
+<!-- STATS -->
+<section class="wrap rv">
+  <p class="eyebrow">цена хаоса</p>
+  <h2>Заказ на 18 млн ₽ живёт в почте, Excel и голове Петровича</h2>
+  <div class="stats">
+    <div class="stat"><div class="v">30%</div><div class="l">информации теряется на каждом переходе между отделами — продажи, КБ, закупки, цех</div></div>
+    <div class="stat"><div class="v">4 часа</div><div class="l">ждёт верфь ответа на запрос — а инженерная оценка ТЗ занимает недели</div></div>
+    <div class="stat"><div class="v">1–2 года</div><div class="l">до тендера решается судьба сделки «закладкой в проект» — и её никто не отслеживает</div></div>
+    <div class="stat"><div class="v">75%</div><div class="l">времени судового агента уходит на бумагу и переписку вместо судозаходов</div></div>
+  </div>
+</section>
+
+<!-- PAINS -->
+<section class="wrap" id="pains">
+  <p class="eyebrow rv">знакомо?</p>
+  <h2 class="rv">Четыре фразы, которые мы слышим на каждом заводе</h2>
+  <div class="pains">
+    <div class="pain rv"><div class="q">«Верфь ждёт ТКП за часы, а оценка у инженеров занимает недели. Сделки умирают в очереди на просчёт»</div>
+      <div class="a">Эллинг: <b>SLA-очередь «продажи → ИЦ»</b> + ИИ-подбор исполненных аналогов по ТЗ — оценка за дни.</div></div>
+    <div class="pain rv"><div class="q">«О срыве срока я узнаю последним — когда отгрузка уже не случилась»</div>
+      <div class="a">Эллинг: <b>карта потока заказов со светофором</b> — весь портфель одним взглядом, риск виден за месяцы.</div></div>
+    <div class="pain rv"><div class="q">«Нашу позицию тихо перезаложили на конкурента в РКД. Узнали на тендере»</div>
+      <div class="a">Эллинг: <b>радар закладок</b> следит за проектами судов от техпроекта до тендера и поднимает тревогу.</div></div>
+    <div class="pain rv"><div class="q">«Архив — двадцать лет сканов на сетевом диске. Поиск аналога — спросить того, кто скоро на пенсию»</div>
+      <div class="a">Эллинг: <b>OCR + ИИ-поиск</b> по ТЗ, протоколам и чертежам — знания остаются в компании.</div></div>
+  </div>
+</section>
+
+<!-- PRODUCT -->
+<section id="product">
+  <div class="wrap">
+    <p class="eyebrow rv">продукт</p>
+    <h2 class="rv">Одна ось заказа — <span class="serif grad-text">все отделы в строю</span></h2>
+    <p class="sec-sub rv">Продажник видит сделку, инженер — задачи, закупщик — спецификацию, директор — маржу и риск. Все смотрят на один и тот же заказ — <b>статусные звонки и планёрки-пересказы отмирают сами.</b></p>
+  </div>
+  <div class="flowband rv">
     <div class="flowrow">
       <div class="fstep d"><i></i><span>Тендер</span></div>
       <div class="fstep d"><i></i><span>Оценка ТЗ</span></div>
       <div class="fstep d"><i></i><span>КП</span></div>
       <div class="fstep d goz"><i></i><span>Цена ВП</span></div>
       <div class="fstep d"><i></i><span>Контракт</span></div>
-      <div class="fstep c"><i></i><span>КД/ОКР</span></div>
-      <div class="fstep"><i></i><span>Произв-во</span></div>
-      <div class="fstep goz"><i></i><span>Приёмка</span></div>
+      <div class="fstep c"><i></i><span>КД / ОКР</span></div>
+      <div class="fstep"><i></i><span>Производство</span></div>
+      <div class="fstep goz"><i></i><span>Приёмка ВП</span></div>
       <div class="fstep"><i></i><span>Отгрузка</span></div>
       <div class="fstep"><i></i><span>ПНР</span></div>
     </div>
-  </section>
-
-  <!-- 6. Продукт -->
-  <section class="slide" data-n="6">
-    <span class="brand"><i></i>эллинг</span>
-    <p class="eyebrow">продукт · MVP уже работает</p>
-    <h2>Три модуля и радар</h2>
-    <div class="grid g3">
-      <div class="card"><div class="num">01</div><h3>Трекер</h3>
-        <ul class="dash"><li>«Сегодня» с одной кнопкой</li><li><b>черновой контур</b> без бюрократии</li><li>извещения из diff версий</li></ul></div>
-      <div class="card"><div class="num">02</div><h3>CRM</h3>
-        <ul class="dash"><li>проекты судов, ИГК, тендеры ЕИС</li><li><b>радар закладок</b>: алерт «позицию заменили»</li><li>честный прогноз из стадий</li></ul></div>
-      <div class="card"><div class="num">03</div><h3>База знаний</h3>
-        <ul class="dash"><li>OCR сканов и штампов</li><li><b>ИИ-поиск аналогов по ТЗ</b></li><li>DWG в браузере, РМРС-сроки</li></ul></div>
+    <p class="flow-note">оранжевые этапы включаются флагом «ГОЗ · 275-ФЗ» — цена ВП, ИГК, приёмка, дедлайны ЕИС ГОЗ</p>
+  </div>
+  <div class="wrap" style="margin-top:54px">
+    <div class="mods">
+      <div class="mod rv"><div class="num">01</div>
+        <h3>Трекер, который заполняется сам</h3>
+        <p>Экран «Сегодня» с одной кнопкой на задачу — канбан не нужно изучать, чтобы двигать работу.</p>
+        <ul>
+          <li>дорожки: заказы, ОКР, сертификация РМРС, рекламации</li>
+          <li><b>черновой контур</b> для ранних стадий — без атрибутов и блокировок</li>
+          <li><b>извещения об изменениях из diff версий</b> — рутина за минуты</li>
+          <li>приложил протокол — этап закрылся сам</li>
+        </ul>
+      </div>
+      <div class="mod rv"><div class="num">02</div>
+        <h3>CRM проектных продаж</h3>
+        <p>Под цикл сделки 6–24 месяца, тендеры и гособоронзаказ — не под «входящие звонки».</p>
+        <ul>
+          <li>сущности отрасли: верфь, проект судна, изделие, ИГК</li>
+          <li><b>радар закладок</b>: П → РКД → закупка, алерт «позицию заменили»</li>
+          <li>тендеры из ЕИС по вашим фильтрам</li>
+          <li><b>честный прогноз</b> из стадий, а не ручного ввода менеджера</li>
+        </ul>
+      </div>
+      <div class="mod rv"><div class="num">03</div>
+        <h3>Инженерная база знаний с ИИ</h3>
+        <p>Архив перестаёт быть кладбищем сканов — становится ускорителем каждой новой оценки.</p>
+        <ul>
+          <li>OCR сканов и штампов — карточки заполняются сами</li>
+          <li><b>ИИ-поиск аналогов по ТЗ</b>: «как мы делали похожее» — за минуты</li>
+          <li>DWG читается в браузере, замечания верфи — аннотациями</li>
+          <li>сертификаты РМРС со сроками, память о поставщиках, ПП 719</li>
+        </ul>
+      </div>
     </div>
-    <div style="margin-top:34px;display:flex;gap:14px;flex-wrap:wrap;align-items:center">
-      <a class="pill" href="https://alexkashin29.github.io/elling-demo/" target="_blank" rel="noopener">Открыть живое демо →</a>
-      <span class="sub" style="margin:0;font-size:13px">работает в браузере, с телефона · без установки</span>
+  </div>
+</section>
+
+<!-- ROLES -->
+<section class="wrap" id="roles">
+  <p class="eyebrow rv">кому</p>
+  <h2 class="rv">Каждой роли — <span class="serif grad-text">своя выгода</span> с первого дня</h2>
+  <p class="sec-sub rv">Системы приживаются, когда полезны лично людям, а не только «руководству для контроля».</p>
+  <div class="roles">
+    <div class="role rv"><span class="who">инженеру</span><h4>Меньше рутины, ноль двойного ввода</h4><p>ИИ находит аналоги по ТЗ, извещения собираются из diff, чертёж открывается в браузере. <b>Твои часы — тебе.</b></p></div>
+    <div class="role rv"><span class="who">продажнику</span><h4>Сделки не умирают в ожидании</h4><p>SLA-таймер на оценке ТЗ, радар закладок, вся переписка в ленте заказа. CRM заполняется сама — из почты.</p></div>
+    <div class="role rv"><span class="who">директору</span><h4>Портфель и маржа — сегодня</h4><p>Карта заказов со светофором риска и прогноз, которому можно верить. <b>Узнавайте о проблеме первым.</b></p></div>
+    <div class="role rv"><span class="who">закупщику</span><h4>Память о поставщиках + ПП 719</h4><p>История срывов и проверенные аналоги по каждой позиции; автопроверка реестровых записей с алертами.</p></div>
+  </div>
+</section>
+
+<!-- SECURITY -->
+<section class="wrap" id="security">
+  <p class="eyebrow rv">безопасность</p>
+  <h2 class="rv">Спроектирован для отрасли, где безопасность — условие сделки</h2>
+  <div class="secgrid rv">
+    <div class="secitem"><b>Два издания</b>Облако для гражданских заказчиков — и коробка в закрытом контуре: Astra Linux, Postgres Pro, офлайн-лицензии, обновления с носителя.</div>
+    <div class="secitem"><b>ГОЗ · 275-ФЗ из коробки</b>ИГК, отдельные счета, этапы «цена ВП» и «приёмка ВП», дедлайны ЕИС ГОЗ. Раздельный учёт остаётся в вашей 1С — мы её не трогаем.</div>
+    <div class="secitem"><b>Работает с тем, что есть</b>Почтовый шлюз для любого Outlook, обмен с 1С от 6.0 до ERP (агент в вашей сети, старые базы — только чтение), импорт Excel за день.</div>
+    <div class="secitem"><b>Безопасная разработка</b>ГОСТ Р 56939-2024, SLA на уязвимости, неизменяемый аудит, роли: инженер не видит маржу, гость-верфь — только свой заказ.</div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="wrap" id="pricing">
+  <p class="eyebrow rv">тарифы</p>
+  <h2 class="rv">Дешевле, чем связка «трекер + CRM + интегратор»</h2>
+  <div class="plans">
+    <div class="plan rv">
+      <h3>Команда</h3>
+      <div class="price">490 ₽<small> / место / мес</small></div>
+      <ul>
+        <li>трекер с осью заказа и «Сегодня»</li>
+        <li>база знаний, версии документов</li>
+        <li>почтовый шлюз заказов</li>
+        <li>импорт Excel, пресеты сегментов</li>
+      </ul>
+      <a class="pill" href="#cta" style="text-align:center">Попробовать</a>
     </div>
-  </section>
-
-  <!-- 7. Почему сейчас -->
-  <section class="slide" data-n="7">
-    <span class="brand"><i></i>эллинг</span>
-    <p class="eyebrow">почему сейчас</p>
-    <h2>Три волны сошлись в одной точке</h2>
-    <div class="grid g3">
-      <div class="card"><span class="who">рынок</span><h3>~500 судов до 2035</h3><p>Программа обновления флота + балльная локализация ПП 719 гарантируют загрузку ~540 поставщиков СКО — нашей ЦА. СКО — это 35–75% стоимости судна.</p></div>
-      <div class="card"><span class="who">вакуум</span><h3>Jira ушла, слой пуст</h3><p>САПР/PLM (АСКОН, Гольфстрим) закрывают проектирование и производство, 1С — учёт. Но <b>коммерческо-операционного слоя поставщика</b> — CRM проектных продаж + путь заказа + инженерная БЗ — <b>нет ни у одного из них</b>.</p></div>
-      <div class="card"><span class="who">технология</span><h3>ИИ дозрел до архивов</h3><p>Открытые русские LLM + OCR делают 20 лет сканов искомыми — впервые это возможно в закрытом контуре, без облаков.</p></div>
+    <div class="plan hot rv">
+      <span class="tag">выбор отрасли</span>
+      <h3>Отрасль</h3>
+      <div class="price">990 ₽<small> / место / мес</small></div>
+      <ul>
+        <li>всё из «Команды»</li>
+        <li>CRM: проекты судов, радар закладок, тендеры ЕИС</li>
+        <li>ГОЗ-механика: ИГК, этапы ВП, дедлайны</li>
+        <li>ИИ-поиск аналогов по ТЗ и архиву</li>
+        <li>обмен с 1С, синк с Битрикс24, гостевой доступ верфи</li>
+      </ul>
+      <a class="pill solid" href="#cta" style="text-align:center">Стать дизайн-партнёром</a>
     </div>
-  </section>
-
-  <!-- 8. Безопасность -->
-  <section class="slide" data-n="8">
-    <span class="brand"><i></i>эллинг</span>
-    <p class="eyebrow">безопасность и совместимость</p>
-    <h2>Спроектирован для отрасли, где безопасность — условие сделки</h2>
-    <div class="grid g4">
-      <div class="card"><h3>Два издания</h3><p>Облако — и коробка в закрытом контуре: Astra Linux, Postgres Pro, офлайн-лицензии.</p></div>
-      <div class="card"><h3>ГОЗ 275-ФЗ</h3><p>ИГК, этапы ВП, дедлайны ЕИС ГОЗ. Раздельный учёт остаётся в вашей 1С.</p></div>
-      <div class="card"><h3>Ваш ландшафт</h3><p>Почтовый шлюз для любого Outlook, обмен с 1С от 6.0 до ERP, импорт Excel за день.</p></div>
-      <div class="card"><h3>Реестр Минцифры</h3><p>Подача в процессе; безопасная разработка по ГОСТ Р 56939-2024, аудит, RBAC-роли.</p></div>
+    <div class="plan rv">
+      <h3>Закрытый контур</h3>
+      <div class="price">от 1,9 млн ₽<small> · до 100 мест + 20%/год</small></div>
+      <ul>
+        <li>коробка on-prem: Astra Linux, Postgres Pro</li>
+        <li>офлайн-лицензии, обновления с носителя</li>
+        <li>российские IdP, интеграция с AD/ALD Pro</li>
+        <li>опция «ИИ-контур»: офлайн-LLM на вашем железе</li>
+      </ul>
+      <a class="pill" href="#cta" style="text-align:center">Обсудить пилот</a>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- 9. Оффер -->
-  <section class="slide" data-n="9">
-    <span class="brand"><i></i>эллинг</span>
-    <span class="glow" style="top:-20%;left:30%"></span>
-    <p class="eyebrow">оффер · только 5 компаний</p>
-    <h2>Дизайн-партнёрство: <span class="serif grad-text">−50% на два года</span></h2>
-    <div class="grid g2" style="max-width:900px">
-      <div class="card"><h3>Вы получаете</h3>
-        <ul class="dash"><li>скидку 50% на 2 года (тариф «Отрасль»: 495 ₽/место)</li><li>внедрение силами нашей команды: импорт ваших Excel, настройка пресета</li><li>прямое влияние на дорожную карту — ваши боли становятся фичами</li></ul></div>
-      <div class="card"><h3>Мы просим</h3>
-        <ul class="dash"><li>час в месяц обратной связи</li><li>доступ к реальным процессам заказа</li><li>право на кейс — по согласованию</li></ul></div>
-    </div>
-    <p class="sub" style="margin-top:26px">Начинаем с часового разговора о ваших процессах — это исследование, не продажа.</p>
-  </section>
+<!-- FINAL CTA -->
+<section class="final wrap" id="cta">
+  <p class="eyebrow rv" style="justify-content:center">набираем 5 дизайн-партнёров · 2026</p>
+  <h2 class="rv">Стройте заказы в Эллинге <span class="serif grad-text">раньше конкурентов</span></h2>
+  <p class="rv">Дизайн-партнёрам — скидка 50% на два года, внедрение силами нашей команды и прямое влияние на дорожную карту. Взамен — ваша обратная связь раз в месяц. Начинаем с часового разговора о ваших процессах.</p>
+  <div class="cta-row rv" style="justify-content:center">
+    <a class="pill solid" href="https://t.me/alexanderandrk" target="_blank" rel="noopener">Написать в Telegram → @alexanderandrk</a>
+    <a class="pill" href="https://alexkashin29.github.io/elling-demo/" target="_blank" rel="noopener">Открыть живое демо</a>
+  </div>
+  <p class="note rv">или запросите демо на ваших данных: импортируем ваш Excel-реестр и покажем ваш реальный портфель</p>
+</section>
 
-  <!-- 10. Контакт -->
-  <section class="slide" data-n="10" style="align-items:center;text-align:center">
-    <span class="glow" style="top:20%;left:25%"></span>
-    <p class="eyebrow" style="justify-content:center">свяжитесь с нами</p>
-    <h1 style="margin-inline:auto">Стройте заказы<br>в <span class="serif grad-text">Эллинге</span></h1>
-    <div style="margin-top:44px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center">
-      <a class="pill" href="https://t.me/alexanderandrk" target="_blank" rel="noopener">Telegram → @alexanderandrk</a>
-      <a class="pill ghost" href="https://alexkashin29.github.io/elling-demo/" target="_blank" rel="noopener">Открыть демо →</a>
-    </div>
-    <p class="sub" style="margin:26px auto 0">Александр · продукт «Эллинг» · Санкт-Петербург</p>
-  </section>
-
-</div>
-
-<div class="dots" id="dots"></div>
-<div class="hint"><button id="prev" aria-label="Назад">←</button><span>листайте · ← →</span><button id="next" aria-label="Вперёд">→</button></div>
+<footer>
+  <div><span class="fbrand">эллинг</span> — операционная система заказа<br>для судостроительной отрасли · СПб · 2026</div>
+  <div>трекер + CRM + инженерная БЗ с ИИ<br>облако и закрытый контур · ГОЗ 275-ФЗ</div>
+  <div style="max-width:320px">Эллинг — крытое сооружение верфи, в котором строят суда.<br>Здесь строятся ваши заказы.
+    <br><br><a href="https://alexkashin29.github.io/elling-demo/" target="_blank" rel="noopener" style="color:var(--steel)">Демо</a> ·
+    <a href="pitch.html" style="color:var(--steel)">Питч</a> ·
+    <a href="onepager.html" style="color:var(--steel)">One-pager</a> ·
+    <a href="invest.html" style="color:var(--steel)">Инвесторам</a></div>
+</footer>
 
 <script>
-const deck = document.getElementById('deck');
-const N = deck.children.length;
-let cur = 0;
-const dots = document.getElementById('dots');
-for(let i=0;i<N;i++){ const d=document.createElement('i'); d.dataset.i=i; dots.appendChild(d); }
-function go(i){
-  cur = Math.max(0, Math.min(N-1, i));
-  deck.style.transform = `translateX(-${cur*100}vw)`;
-  dots.querySelectorAll('i').forEach((d,j)=>d.classList.toggle('on', j===cur));
-}
-document.getElementById('next').onclick = ()=>go(cur+1);
-document.getElementById('prev').onclick = ()=>go(cur-1);
-dots.onclick = e=>{ if(e.target.dataset.i) go(+e.target.dataset.i); };
-addEventListener('keydown', e=>{
-  if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' ') go(cur+1);
-  if(e.key==='ArrowLeft'||e.key==='PageUp') go(cur-1);
-});
-let tx=null;
-addEventListener('touchstart', e=>tx=e.touches[0].clientX, {passive:true});
-addEventListener('touchend', e=>{
-  if(tx===null) return; const dx = e.changedTouches[0].clientX - tx;
-  if(Math.abs(dx)>60) go(cur + (dx<0?1:-1)); tx=null;
-}, {passive:true});
-go(0);
+// loader
+window.addEventListener('load', ()=> setTimeout(()=> {
+  const l = document.getElementById('loader'); if(l) l.classList.add('done');
+}, 650));
+setTimeout(()=>{ const l=document.getElementById('loader'); if(l) l.classList.add('done'); }, 2200);
+
+// nav scroll
+const nav = document.getElementById('nav');
+addEventListener('scroll', ()=> nav.classList.toggle('scrolled', scrollY > 30), {passive:true});
+
+// marquee duplicate
+const mq = document.getElementById('mq');
+if(mq) mq.innerHTML += mq.innerHTML;
+
+// reveal
+const io = new IntersectionObserver(es=>es.forEach(e=>{
+  if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+}), {threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 </script>
 
-</body>
 </html>
