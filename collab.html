@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Эллинг — как общаются верфь и поставщик в одной системе</title>
+<meta name="description" content="Архитектура кросс-организационного взаимодействия Эллинг: облако поставщика + коробка верфи (закрытый контур), федерация «нити заказа», владение статусами, обмен без почты и звонков.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEF1F4; --paper:#FFFFFF; --panel2:#F3F6F9;
+    --ink:#0E2430; --ink2:#3F5765; --muted:#7A8894;
+    --line:#DCE3E9; --line2:#E7ECF1;
+    --accent:#0C6B8F; --accent-soft:#DCEBF1; --steel:#38C6E8;
+    --navy:#12384A; --navy-soft:#E4EEF3;
+    --good:#1E7D46; --good-soft:#E1F1E7; --warn:#A9660A; --risk:#B3261E;
+    --mono:"Cascadia Mono",Consolas,"Roboto Mono",monospace;
+    --sans:'Onest','Segoe UI',-apple-system,'Helvetica Neue',Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not(.print){--bg:#0B131A;--paper:#121E28;--panel2:#18262F;--ink:#E4EEF4;--ink2:#A9B9C5;
+      --muted:#788693;--line:#283A45;--line2:#20303A;--accent:#37AECF;--accent-soft:#0E2B37;--steel:#38C6E8;
+      --navy:#8FC0D6;--navy-soft:#152A38;--good:#5FBF83;--warn:#E0A03C;--risk:#E07068;}
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;font-size:14px}
+  .sheet{max-width:920px;margin:22px auto;background:var(--paper);border:1px solid var(--line);border-radius:16px;
+    padding:36px 44px 32px;box-shadow:0 24px 70px -34px rgba(12,40,55,.5)}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding-bottom:18px;border-bottom:2px solid var(--accent)}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(140deg,#1E86B0,#0A5473);position:relative;flex:none}
+  .brand .mark::after{content:"";position:absolute;inset:0;border-radius:9px;background:linear-gradient(180deg,transparent 54%,var(--paper) 54%,var(--paper) 66%,transparent 66%)}
+  .brand .nm{font-size:22px;font-weight:800;letter-spacing:-.02em}
+  .brand .nm small{display:block;font-family:var(--mono);font-size:10px;font-weight:400;letter-spacing:.05em;color:var(--muted);margin-top:2px}
+  .tag{text-align:right;font-size:11.5px;color:var(--muted);font-family:var(--mono);line-height:1.7}
+
+  h1{font-size:23px;font-weight:800;letter-spacing:-.02em;margin:22px 0 6px;text-wrap:balance}
+  h1 b{color:var(--accent)}
+  .lead{font-size:14.5px;color:var(--ink2);max-width:64em}
+  h2{font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin:26px 0 12px;font-weight:600;
+    display:flex;align-items:center;gap:10px}
+  h2::before{content:"";width:22px;height:2px;background:var(--accent);flex:none}
+  p{font-size:13.5px;color:var(--ink2);margin-bottom:9px}
+  p b,li b{color:var(--ink);font-weight:650}
+  .q{background:var(--navy-soft);border-radius:12px;padding:14px 18px;font-size:13.5px;color:var(--ink);margin:10px 0 4px}
+  .q b{color:var(--accent)}
+
+  .topos{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:6px 0 8px}
+  .topo{border:1px solid var(--line);border-radius:14px;padding:16px 17px;background:var(--panel2)}
+  .topo .n{font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:600}
+  .topo h3{font-size:15px;font-weight:750;margin:4px 0 8px;letter-spacing:-.01em}
+  .topo p{font-size:12.3px;margin-bottom:8px}
+  .topo .st{display:inline-block;font-size:10.5px;font-weight:700;border-radius:99px;padding:2px 9px}
+  .st.now{background:var(--good-soft);color:var(--good)}
+  .st.build{background:var(--accent-soft);color:var(--accent)}
+  .st.opk{background:var(--navy-soft);color:var(--navy)}
+
+  .diag{border:1px solid var(--line);border-radius:14px;background:var(--panel2);padding:18px;margin:8px 0;overflow-x:auto}
+  .diag pre{font-family:var(--mono);font-size:11.5px;color:var(--ink2);line-height:1.5;white-space:pre;min-width:640px}
+  .diag pre b{color:var(--accent)}
+
+  table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12.7px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  td b{color:var(--ink)}
+  .own{font-weight:700;border-radius:6px;padding:1px 8px;font-size:11px;white-space:nowrap}
+  .own.sup{background:var(--accent-soft);color:var(--accent)}
+  .own.yard{background:var(--good-soft);color:var(--good)}
+  .own.both{background:var(--navy-soft);color:var(--navy)}
+
+  ul{list-style:none;margin:4px 0}
+  li{font-size:13px;color:var(--ink2);padding:5px 0 5px 18px;position:relative}
+  li::before{content:"—";position:absolute;left:0;color:var(--accent)}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .cross{background:var(--accent-soft);border-radius:12px;padding:14px 18px;margin-top:6px}
+  .cross b{color:var(--ink)}
+  .never{background:var(--panel2);border:1px dashed var(--line);border-radius:12px;padding:14px 18px;margin-top:10px;font-size:12.7px;color:var(--ink2)}
+  .never b{color:var(--risk)}
+
+  .flow{counter-reset:s;margin:6px 0}
+  .flow .step{display:flex;gap:12px;padding:10px 0;border-top:1px solid var(--line2)}
+  .flow .step:first-child{border-top:none}
+  .flow .step .num{counter-increment:s;flex:none;width:24px;height:24px;border-radius:8px;background:var(--accent);color:#fff;
+    font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .flow .step .num::before{content:counter(s)}
+  .flow .step .b{font-size:13px}
+  .flow .step .b b{color:var(--ink)}
+  .flow .step .b .who{font-family:var(--mono);font-size:10.5px;color:var(--muted);display:block;margin-top:2px}
+
+  .concl{background:var(--navy);color:#fff;border-radius:14px;padding:20px 24px;margin-top:14px}
+  .concl h2{color:#fff;margin-top:0}
+  .concl h2::before{background:var(--steel)}
+  .concl li{color:rgba(255,255,255,.85)}
+  .concl li::before{color:var(--steel)}
+  .concl li b{color:#fff}
+
+  .foot{margin-top:22px;padding-top:14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10.5px;color:var(--muted);
+    display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;line-height:1.6}
+  .printbtn{position:fixed;bottom:20px;right:20px;background:var(--accent);color:#fff;border:none;border-radius:99px;
+    padding:11px 20px;font-size:13px;font-weight:700;font-family:var(--sans);cursor:pointer;box-shadow:0 10px 26px -8px rgba(12,107,143,.6)}
+  @media print{.printbtn{display:none}body{background:#fff;font-size:10.4pt}@page{size:A4;margin:11mm}
+    .sheet{margin:0;border:none;border-radius:0;box-shadow:none;padding:0;max-width:100%}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  @media (max-width:720px){.topos{grid-template-columns:1fr}.cols{grid-template-columns:1fr}.sheet{padding:24px 20px}}
+</style>
+
+<div class="sheet">
+  <div class="top">
+    <div class="brand"><span class="mark"></span>
+      <span class="nm">Эллинг<small>концепт-записка · архитектура</small></span></div>
+    <div class="tag">кросс-орг взаимодействие<br>верфь ↔ поставщик<br>облако + закрытый контур</div>
+  </div>
+
+  <h1>Как <b>верфь и поставщик</b> работают в одной системе — без почты и звонков, даже когда у одного коробка, а у другого облако</h1>
+  <p class="lead">Записка отвечает на вопрос: если гос- или гражданская верфь и поставщик СКО ведут заказ в Эллинге, а разведены по контурам (поставщик — облако, верфь — коробка on-prem / КИИ), — как они двигают друг другу статусы, обмениваются ТЗ и чертежами, комментируют, как ИЦ принимает, как ВП оформляет приёмку. Ниже — модель, разграничение прав и конкретные выводы.</p>
+
+  <div class="q">Ключевая развилка: <b>кто «система записи» заказа</b> и <b>проходит ли граница контура между участниками</b>. Из этого — три топологии. Они не взаимоисключающие: продукт поддерживает все три, выбор — под пару «верфь × поставщик».</div>
+
+  <h2>Три топологии взаимодействия</h2>
+  <div class="topos">
+    <div class="topo"><span class="n">Т1</span><h3>Один арендатор + гостевой доступ</h3>
+      <p>Эллинг поставщика — единая система записи. Верфь/ВП заходят как <b>внешние участники с узкими правами</b> (портал заказчика). Видят вехи, документы, Q&A, оформляют приёмку — но в облаке поставщика.</p>
+      <span class="st now">уже в демо</span></div>
+    <div class="topo"><span class="n">Т2</span><h3>Две инсталляции + федерация</h3>
+      <p>У верфи свой Эллинг (коробка), у поставщика свой (облако). Связаны через <b>федерацию «нити заказа»</b> — синхронизируется только оговорённый набор полей и событий. Внутренние данные не покидают контур.</p>
+      <span class="st build">бэкенд-трек</span></div>
+    <div class="topo"><span class="n">Т3</span><h3>Закрытый контур + асинхронный шлюз</h3>
+      <p>Верфь в КИИ / воздушном зазоре — живой синхронизации нет. Обмен <b>подписанными пакетами (.elx)</b> через ЭДО, диод данных или шлюз в ДМЗ с ФСТЭК-фильтрацией. Не реалтайм, но структурно и аудируемо.</p>
+      <span class="st opk">для ОПК</span></div>
+  </div>
+
+  <h2>Что именно пересекает границу — «нить заказа»</h2>
+  <p>Между организациями синхронизируется <b>не всё</b>, а узкий подписанный контракт — общий объект «нить заказа». Каждая сторона проецирует его на свой внутренний процесс.</p>
+  <div class="cols">
+    <div>
+      <div class="cross"><b>Пересекает границу (общее):</b>
+        <ul>
+          <li>статусы этапов (только «свои» поля — см. владение)</li>
+          <li>документы: ТЗ, чертёж (ссылка + хеш), ТКП, извещения ГОСТ 2.503</li>
+          <li>комментарии, помеченные «внешними» — с атрибуцией лицо + организация</li>
+          <li>приёмка и замечания ВП</li>
+          <li>вопросы-ответы (Q&A) по заказу</li>
+        </ul></div>
+    </div>
+    <div>
+      <div class="never"><b>Никогда не пересекает (внутреннее):</b> маржа и себестоимость, свои поставщики и закупочные цены, внутренняя переписка и задачи ИЦ, оценка трудоёмкости «для себя», зарплаты/ресурсы. Внешний участник видит <b>статус и артефакт</b>, а не кухню.</div>
+    </div>
+  </div>
+
+  <h2>Кто двигает какой статус — владение полем</h2>
+  <p>У каждого общего поля есть <b>сторона-владелец</b>. Владелец двигает статус авторитетно; вторая сторона видит изменение и может лишь предложить своё. Так исчезает «война статусов» и понятно, чей ход.</p>
+  <table>
+    <tr><th>Событие / статус</th><th>Владелец</th><th>Что видит вторая сторона</th></tr>
+    <tr><td><b>Проект / комплект передан заказчику</b></td><td><span class="own sup">поставщик</span></td><td>у верфи появляется «получен проект» + документ в нити</td></tr>
+    <tr><td><b>ТЗ принято / отправлено на доработку</b></td><td><span class="own yard">верфь / ИЦ</span></td><td>у поставщика — входящее + автозадача ИЦ «доработать ТЗ»</td></tr>
+    <tr><td><b>ТКП сформировано и отправлено</b></td><td><span class="own sup">поставщик</span></td><td>у верфи — «получено ТКП», можно согласовать цену</td></tr>
+    <tr><td><b>Приёмка ВП / замечание</b></td><td><span class="own yard">верфь / ВП</span></td><td>у поставщика — статус приёмки, замечание → задача</td></tr>
+    <tr><td><b>Готовность к отгрузке</b></td><td><span class="own sup">поставщик</span></td><td>у верфи — план поставки под такт стапеля</td></tr>
+    <tr><td><b>Комментарий в нити</b></td><td><span class="own both">обе</span></td><td>виден обеим, подписан лицо+организация; внутренние — не уходят</td></tr>
+  </table>
+
+  <h2>Как это выглядит в работе — сценарии (без почты и звонков)</h2>
+  <div class="flow">
+    <div class="step"><span class="num"></span><div class="b"><b>Поставщик скинул проект заказчику.</b> Менеджер двигает этап нити → событие «проект передан» синхронизируется в Эллинг верфи (или в портал). Верфь видит документ и статус у себя — письма нет.<span class="who">владелец: поставщик · Т1 портал / Т2 федерация</span></div></div>
+    <div class="step"><span class="num"></span><div class="b"><b>Верфь отправила ТЗ на доработку.</b> ИЦ верфи комментирует и ставит «ТЗ на доработку» (поле верфи) → у поставщика входящее + автозадача ИЦ с текстом замечаний.<span class="who">владелец: верфь · комментарий помечен «внешний»</span></div></div>
+    <div class="step"><span class="num"></span><div class="b"><b>ИЦ между собой приняли и внесли правки.</b> Внутренние комментарии и задачи ИЦ остаются в своей организации. В общую нить уходит только то, что помечено «внешним», — переключатель на каждом комментарии.<span class="who">разделение: внутренний ↔ внешний комментарий</span></div></div>
+    <div class="step"><span class="num"></span><div class="b"><b>ВП оформила приёмку.</b> Военная приёмка на стороне верфи ставит «принято / замечание» (поле верфи) → у поставщика меняется статус приёмки, замечание становится задачей.<span class="who">владелец: верфь/ВП · аудит-подпись обеих сторон</span></div></div>
+  </div>
+
+  <h2>Согласованность и закрытый контур</h2>
+  <ul>
+    <li><b>Т2 (федерация):</b> событийная синхронизация, по каждому полю — «последний пишущий владелец», версия/ревизия на нить (в Эллинге уже есть rev-синхронизация и идемпотентное применение — тот же принцип, что защищает от дублей в мультиплеере).</li>
+    <li><b>Т3 (воздушный зазор):</b> пакет <b>.elx</b> = набор подписанных событий с прошлого обмена; применяется идемпотентно (повтор пакета не создаёт дублей). Переносится ЭДО / диодом / курьером. Это ложится на реальность ГОЗ, где обмен и так формальный.</li>
+    <li><b>Личность и доверие:</b> у каждой стороны свой IdP (верфь — AD/ALD Pro в контуре; поставщик — облачный). Внешний актор = федеративный гость с подтверждённой организацией. Каждое действие подписано и атрибутировано «лицо + организация + время».</li>
+  </ul>
+
+  <div class="concl">
+    <h2>Конкретные выводы</h2>
+    <ul>
+      <li><b>Две SKU уже совпадают с реальностью</b> — облако (поставщик) и коробка/закрытый контур (верфь). Не хватает моста между ними: продаётся как <b>«Эллинг Мост»</b> — модуль межорганизационного обмена.</li>
+      <li><b>Синхронизируется узкий подписанный контракт «нить заказа»</b>, а не все данные. Экономика и кухня не пересекают границу никогда — это снимает главный страх завода делиться в системе поставщика.</li>
+      <li><b>Владение полем</b> («кто двигает статус») — ядро модели: убирает конфликт и делает понятным, чей ход. Проектируется в первую очередь.</li>
+      <li><b>Закрытый контур = асинхронный подписанный обмен</b>, а не живой синк. Переиспользуем уже существующий паттерн «Эллинг Агент / коннекторы / импорт», расширив до inter-org формата.</li>
+      <li><b>Это сетевой ров (EDI-эффект):</b> когда верфи и поставщики ведут заказы в общих нитях Эллинга, стоимость ухода растёт. Каждая новая верфь повышает ценность для всех поставщиков — не только подписка за место, но эффект площадки.</li>
+      <li><b>Фазность:</b> Т1 (гостевой портал) работает уже сегодня — в демо. Т2 (федерация) — тот самый бэкенд-трек. Т3 (обмен для ОПК) — enabler закрытого контура на подписанных пакетах.</li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    <span>Эллинг · концепт-записка · кросс-орг взаимодействие · СПб · 2026</span>
+    <span>демо: alexkashin29.github.io/elling-demo · @alexanderandrk</span>
+  </div>
+</div>
+<button class="printbtn" onclick="window.print()">Сохранить в PDF ↧</button>
+
+</html>
