@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Эллинг — роли, иерархия и доступы</title>
+<meta name="description" content="Ролевая модель Эллинг: иерархия (дирекция → руководитель отдела → сотрудник), доступ к данным по вертикали и горизонтали, матрица прав, финансовая видимость, делегирование и специфика ГОЗ.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#EEF1F4;--paper:#FFFFFF;--panel2:#F3F6F9;--ink:#0E2430;--ink2:#3F5765;--muted:#7A8894;--line:#DCE3E9;--line2:#E7ECF1;
+    --accent:#0C6B8F;--accent-soft:#DCEBF1;--steel:#38C6E8;--navy:#12384A;--navy-soft:#E4EEF3;--good:#1E7D46;--good-soft:#E1F1E7;--warn:#A9660A;--risk:#B3261E;
+    --mono:"Cascadia Mono",Consolas,"Roboto Mono",monospace;--sans:'Onest','Segoe UI',-apple-system,'Helvetica Neue',Arial,sans-serif;}
+  @media (prefers-color-scheme:dark){:root:not(.print){--bg:#0B131A;--paper:#121E28;--panel2:#18262F;--ink:#E4EEF4;--ink2:#A9B9C5;--muted:#788693;--line:#283A45;--line2:#20303A;--accent:#37AECF;--accent-soft:#0E2B37;--navy:#8FC0D6;--navy-soft:#152A38;--good:#5FBF83;--good-soft:#14301F;}}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;font-size:14px}
+  .sheet{max-width:920px;margin:22px auto;background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:36px 44px 32px;box-shadow:0 24px 70px -34px rgba(12,40,55,.5)}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding-bottom:18px;border-bottom:2px solid var(--accent)}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(140deg,#1E86B0,#0A5473);position:relative;flex:none}
+  .brand .mark::after{content:"";position:absolute;inset:0;border-radius:9px;background:linear-gradient(180deg,transparent 54%,var(--paper) 54%,var(--paper) 66%,transparent 66%)}
+  .brand .nm{font-size:22px;font-weight:800;letter-spacing:-.02em}
+  .brand .nm small{display:block;font-family:var(--mono);font-size:10px;font-weight:400;letter-spacing:.05em;color:var(--muted);margin-top:2px}
+  .tag{text-align:right;font-size:11.5px;color:var(--muted);font-family:var(--mono);line-height:1.7}
+  h1{font-size:23px;font-weight:800;letter-spacing:-.02em;margin:22px 0 6px;text-wrap:balance}
+  h1 b{color:var(--accent)}
+  .lead{font-size:14.5px;color:var(--ink2);max-width:64em}
+  h2{font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin:26px 0 12px;font-weight:600;display:flex;align-items:center;gap:10px}
+  h2::before{content:"";width:22px;height:2px;background:var(--accent);flex:none}
+  p{font-size:13.5px;color:var(--ink2);margin-bottom:9px}
+  p b,li b,td b{color:var(--ink);font-weight:650}
+  ul{list-style:none;margin:4px 0}
+  li{font-size:13px;color:var(--ink2);padding:5px 0 5px 18px;position:relative}
+  li::before{content:"—";position:absolute;left:0;color:var(--accent)}
+  .tiers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:6px 0}
+  .tier{border:1px solid var(--line);border-radius:14px;padding:16px 17px;background:var(--panel2)}
+  .tier .n{font-family:var(--mono);font-size:10.5px;color:var(--accent);font-weight:600}
+  .tier h3{font-size:15px;font-weight:750;margin:4px 0 8px}
+  .tier p{font-size:12.3px;margin-bottom:6px}
+  .tier .who{font-size:11.5px;color:var(--muted)}
+  table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12.5px}
+  th,td{padding:8px 10px;border-bottom:1px solid var(--line2);vertical-align:top;text-align:left}
+  th{font-family:var(--mono);font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  .c{text-align:center;font-weight:700}
+  .yes{color:var(--good)}.ro{color:var(--steel)}.no{color:var(--muted)}
+  .q{background:var(--navy-soft);border-radius:12px;padding:14px 18px;font-size:13.5px;color:var(--ink);margin:10px 0 4px}
+  .q b{color:var(--accent)}
+  .concl{background:var(--navy);color:#fff;border-radius:14px;padding:20px 24px;margin-top:14px}
+  .concl h2{color:#fff;margin-top:0}.concl h2::before{background:var(--steel)}
+  .concl li{color:rgba(255,255,255,.85)}.concl li::before{color:var(--steel)}.concl li b{color:#fff}
+  .foot{margin-top:22px;padding-top:14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10.5px;color:var(--muted);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;line-height:1.6}
+  .printbtn{position:fixed;bottom:20px;right:20px;background:var(--accent);color:#fff;border:none;border-radius:99px;padding:11px 20px;font-size:13px;font-weight:700;font-family:var(--sans);cursor:pointer;box-shadow:0 10px 26px -8px rgba(12,107,143,.6)}
+  @media print{.printbtn{display:none}body{background:#fff;font-size:10.4pt}@page{size:A4;margin:11mm}.sheet{margin:0;border:none;border-radius:0;box-shadow:none;padding:0;max-width:100%}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  @media(max-width:720px){.tiers{grid-template-columns:1fr}.sheet{padding:24px 20px}}
+</style>
+<div class="sheet">
+  <div class="top">
+    <div class="brand"><span class="mark"></span><span class="nm">Эллинг<small>концепт-записка · роли и доступы</small></span></div>
+    <div class="tag">RBAC по иерархии<br>дирекция → отдел → сотрудник<br>вертикаль + горизонталь + финансы</div>
+  </div>
+
+  <h1>Роли, <b>иерархия и доступы</b>: кто кого видит, у кого больше прав и функций</h1>
+  <p class="lead">Доступ в Эллинге определяется ролью в оргструктуре. Старший видит подчинённых и их роли; у него шире и доступ к данным, и набор функций. Ниже — три уровня иерархии, правила видимости по вертикали и горизонтали, матрица прав, финансовая видимость, делегирование и специфика ГОЗ. Модель — стандартный RBAC (роль → права → область) с иерархическим наследованием, как в 1С/Bitrix24/Ozon Seller и корпоративных ERP.</p>
+
+  <div class="q">Два независимых измерения доступа: <b>объём функций</b> (что можно делать — RBAC-права) и <b>область данных</b> (чьи данные видно — scope по иерархии и отделу). Роль задаёт оба.</div>
+
+  <h2>Три уровня иерархии</h2>
+  <div class="tiers">
+    <div class="tier"><span class="n">Уровень 0–1</span><h3>Дирекция</h3>
+      <p>Видит всю компанию насквозь: портфель, финансы, аудит. Максимум функций.</p>
+      <div class="who"><b>Директор</b> — плюс настройка ролей и доступов.<br><b>Зам. директора</b> — всё, кроме управления доступами (делегирование).</div></div>
+    <div class="tier"><span class="n">Уровень 2</span><h3>Руководитель отдела</h3>
+      <p>Видит свой отдел целиком + смежные по чтению. Управляет своей командой и её метриками.</p>
+      <div class="who"><b>Рук. продаж · закупок · логистики · ИЦ.</b> Видит роли и работу своих подчинённых.</div></div>
+    <div class="tier"><span class="n">Уровень 3</span><h3>Сотрудник</h3>
+      <p>Видит свой участок: свои задачи/сделки/позиции + общий контекст заказа по чтению.</p>
+      <div class="who"><b>Инженер · продажи · закупки · логист.</b> Финансовая кухня и чужие отделы скрыты.</div></div>
+  </div>
+
+  <h2>Правила видимости данных</h2>
+  <ul>
+    <li><b>Вертикаль (иерархия):</b> руководитель видит данные всех своих подчинённых по цепочке; сотрудник — только свои. Директор/зам — вся компания.</li>
+    <li><b>Горизонталь (отделы):</b> внутри своего отдела — полный доступ; смежные отделы — только чтение статусов на общей «оси заказа» (продажи видят производство по чтению, не наоборот в детали).</li>
+    <li><b>Финансы (маржа, себестоимость, нормо-часы):</b> дирекция — полностью; продажи — маржа своих сделок; закупки — закупочные цены своих позиций; инженерам и логистам финансовая кухня скрыта.</li>
+    <li><b>ГОЗ / гостевой контур:</b> внешние участники (верфь, ВП) — отдельная поверхность (портал), не входят в оргструктуру; видят только то, что синхронизировано наружу (см. записку «Кросс-орг»).</li>
+  </ul>
+
+  <h2>Матрица прав — роль × модуль</h2>
+  <table>
+    <tr><th>Роль</th><th class="c">CRM/Сделки</th><th class="c">Заказы</th><th class="c">Снабжение</th><th class="c">Инж.центр</th><th class="c">Финансы</th><th class="c">Отчёты</th><th class="c">Аудит</th><th class="c">Доступы</th></tr>
+    <tr><td><b>Директор</b></td><td class="c ro">○</td><td class="c ro">○</td><td class="c ro">○</td><td class="c ro">○</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td></tr>
+    <tr><td><b>Зам. директора</b></td><td class="c ro">○</td><td class="c ro">○</td><td class="c ro">○</td><td class="c ro">○</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c yes">✓</td><td class="c ro">○</td></tr>
+    <tr><td><b>Рук. продаж</b></td><td class="c yes">✓</td><td class="c ro">○</td><td class="c no">—</td><td class="c ro">○</td><td class="c ro">○</td><td class="c ro">○</td><td class="c no">—</td><td class="c no">—</td></tr>
+    <tr><td><b>Рук. закупок</b></td><td class="c no">—</td><td class="c ro">○</td><td class="c yes">✓</td><td class="c no">—</td><td class="c no">—</td><td class="c ro">○</td><td class="c no">—</td><td class="c no">—</td></tr>
+    <tr><td><b>Рук. логистики</b></td><td class="c no">—</td><td class="c yes">✓</td><td class="c ro">○</td><td class="c no">—</td><td class="c no">—</td><td class="c ro">○</td><td class="c no">—</td><td class="c no">—</td></tr>
+    <tr><td><b>Рук. ИЦ</b></td><td class="c no">—</td><td class="c ro">○</td><td class="c no">—</td><td class="c yes">✓</td><td class="c no">—</td><td class="c ro">○</td><td class="c no">—</td><td class="c no">—</td></tr>
+    <tr><td><b>Инженер</b></td><td class="c no">—</td><td class="c ro">○</td><td class="c no">—</td><td class="c yes">✓</td><td class="c no">—</td><td class="c no">—</td><td class="c no">—</td><td class="c no">—</td></tr>
+    <tr><td><b>Продажи</b></td><td class="c yes">✓</td><td class="c ro">○</td><td class="c no">—</td><td class="c no">—</td><td class="c ro">○</td><td class="c no">—</td><td class="c no">—</td><td class="c no">—</td></tr>
+    <tr><td><b>Закупки</b></td><td class="c no">—</td><td class="c ro">○</td><td class="c yes">✓</td><td class="c no">—</td><td class="c no">—</td><td class="c no">—</td><td class="c no">—</td><td class="c no">—</td></tr>
+    <tr><td><b>Логист</b></td><td class="c no">—</td><td class="c yes">✓</td><td class="c ro">○</td><td class="c no">—</td><td class="c no">—</td><td class="c no">—</td><td class="c no">—</td><td class="c no">—</td></tr>
+  </table>
+  <p style="font-size:11.5px;color:var(--muted)"><b class="yes">✓</b> полный доступ (правка) · <b class="ro">○</b> только чтение · <b>—</b> нет. Правка «Доступы» — только у директора; зам — чтение (страховка/делегирование).</p>
+
+  <h2>Функции, а не только данные</h2>
+  <p>Чем выше роль — тем больше действий, а не только видимости. Управленцы (уровни 0–2) дополнительно получают:</p>
+  <ul>
+    <li><b>Пульт руководителя</b> на «Сегодня» — состояние портфеля/отдела и что требует вмешательства.</li>
+    <li><b>«Моя команда»</b> — список подчинённых, их роли и участки (директор видит роли всех вниз по цепочке).</li>
+    <li><b>Отчёты и экспорт</b>; дирекция — ещё аудит действий и настройку ролей/автоматизаций.</li>
+    <li>Сотрудник видит «Добрый день» + свою очередь; управленец — сводку по людям и рискам.</li>
+  </ul>
+
+  <h2>Делегирование и подмена</h2>
+  <ul>
+    <li><b>Зам. директора</b> — почти полный доступ директора, кроме управления доступами: обеспечивает непрерывность, когда директор недоступен.</li>
+    <li><b>Врио / замещение:</b> временная выдача прав руководителя сотруднику (в проде — на срок, с аудитом). Не постоянная роль.</li>
+    <li><b>Принцип наименьших привилегий:</b> по умолчанию роль даёт минимум; расширение — явной выдачей, с записью в аудит.</li>
+  </ul>
+
+  <div class="concl">
+    <h2>Выводы</h2>
+    <ul>
+      <li><b>Доступ = роль × иерархия × отдел.</b> Роль задаёт функции; иерархия — глубину видимости вниз; отдел — горизонтальные границы. Три измерения, а не плоский список ролей.</li>
+      <li><b>Старший видит подчинённых и их роли</b> — реализовано оргструктурой-деревом и панелью «Моя команда» (уже в продукте: Настройки → Пользователи и роли).</li>
+      <li><b>Больше уровень — больше и данных, и функций:</b> пульт, команда, отчёты, аудит, управление доступами — по возрастанию.</li>
+      <li><b>Финансы — отдельная ось видимости:</b> маржа и себестоимость закрыты для исполнителей и смежных отделов; это снимает риск утечки коммерческой тайны внутри компании.</li>
+      <li><b>Стандарт RBAC + иерархическое наследование</b> ложится на SSO/OIDC и раздельный доступ ГОЗ; внешние участники живут вне оргструктуры, через гостевой контур.</li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    <span>Эллинг · концепт-записка · роли и доступы · СПб · 2026</span>
+    <span>демо: alexkashin29.github.io/elling-demo · @alexanderandrk</span>
+  </div>
+</div>
+<button class="printbtn" onclick="window.print()">Сохранить в PDF ↧</button>
+
+</html>
