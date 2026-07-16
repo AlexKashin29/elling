@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Эллинг — как мигрировать текущие проекты в систему</title>
+<meta name="description" content="Стратегия миграции проектов в Эллинг: подсветка поверх существующих систем (1С, PLM), три уровня миграции, онбординг-движок, дедуп по шифру проекта, фазный план и кейс крупного интегратора (Кронштадт).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEF1F4; --paper:#FFFFFF; --panel2:#F3F6F9;
+    --ink:#0E2430; --ink2:#3F5765; --muted:#7A8894;
+    --line:#DCE3E9; --line2:#E7ECF1;
+    --accent:#0C6B8F; --accent-soft:#DCEBF1; --steel:#38C6E8;
+    --navy:#12384A; --navy-soft:#E4EEF3;
+    --good:#1E7D46; --good-soft:#E1F1E7; --warn:#A9660A; --warn-soft:#F6EBD8; --risk:#B3261E;
+    --mono:"Cascadia Mono",Consolas,"Roboto Mono",monospace;
+    --sans:'Onest','Segoe UI',-apple-system,'Helvetica Neue',Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not(.print){--bg:#0B131A;--paper:#121E28;--panel2:#18262F;--ink:#E4EEF4;--ink2:#A9B9C5;
+      --muted:#788693;--line:#283A45;--line2:#20303A;--accent:#37AECF;--accent-soft:#0E2B37;--steel:#38C6E8;
+      --navy:#8FC0D6;--navy-soft:#152A38;--good:#5FBF83;--good-soft:#14301F;--warn:#E0A03C;--warn-soft:#2C2411;--risk:#E07068;}
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;font-size:14px}
+  .sheet{max-width:920px;margin:22px auto;background:var(--paper);border:1px solid var(--line);border-radius:16px;
+    padding:36px 44px 32px;box-shadow:0 24px 70px -34px rgba(12,40,55,.5)}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding-bottom:18px;border-bottom:2px solid var(--accent)}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(140deg,#1E86B0,#0A5473);position:relative;flex:none}
+  .brand .mark::after{content:"";position:absolute;inset:0;border-radius:9px;background:linear-gradient(180deg,transparent 54%,var(--paper) 54%,var(--paper) 66%,transparent 66%)}
+  .brand .nm{font-size:22px;font-weight:800;letter-spacing:-.02em}
+  .brand .nm small{display:block;font-family:var(--mono);font-size:10px;font-weight:400;letter-spacing:.05em;color:var(--muted);margin-top:2px}
+  .tag{text-align:right;font-size:11.5px;color:var(--muted);font-family:var(--mono);line-height:1.7}
+  h1{font-size:23px;font-weight:800;letter-spacing:-.02em;margin:22px 0 6px;text-wrap:balance}
+  h1 b{color:var(--accent)}
+  .lead{font-size:14.5px;color:var(--ink2);max-width:64em}
+  h2{font-family:var(--mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin:26px 0 12px;font-weight:600;display:flex;align-items:center;gap:10px}
+  h2::before{content:"";width:22px;height:2px;background:var(--accent);flex:none}
+  p{font-size:13.5px;color:var(--ink2);margin-bottom:9px}
+  p b,li b{color:var(--ink);font-weight:650}
+  .q{background:var(--navy-soft);border-radius:12px;padding:14px 18px;font-size:13.5px;color:var(--ink);margin:10px 0 4px}
+  .q b{color:var(--accent)}
+  .lv{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:6px 0 8px}
+  .lvl{border:1px solid var(--line);border-radius:14px;padding:16px 17px;background:var(--panel2)}
+  .lvl .n{font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:600}
+  .lvl h3{font-size:15px;font-weight:750;margin:4px 0 8px;letter-spacing:-.01em}
+  .lvl p{font-size:12.3px;margin-bottom:8px}
+  .lvl .t{display:inline-block;font-size:10.5px;font-weight:700;border-radius:99px;padding:2px 9px;background:var(--good-soft);color:var(--good)}
+  .lvl .t.b{background:var(--accent-soft);color:var(--accent)}
+  table{width:100%;border-collapse:collapse;margin:8px 0;font-size:12.7px}
+  th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line2);vertical-align:top}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);font-weight:600}
+  td b{color:var(--ink)}
+  .mv{font-weight:700;border-radius:6px;padding:1px 8px;font-size:11px;white-space:nowrap}
+  .mv.copy{background:var(--accent-soft);color:var(--accent)}
+  .mv.conn{background:var(--good-soft);color:var(--good)}
+  ul{list-style:none;margin:4px 0}
+  li{font-size:13px;color:var(--ink2);padding:5px 0 5px 18px;position:relative}
+  li::before{content:"—";position:absolute;left:0;color:var(--accent)}
+  .timeline{margin:6px 0}
+  .tl{display:flex;gap:14px;padding:11px 0;border-top:1px solid var(--line2)}
+  .tl:first-child{border-top:none}
+  .tl .when{flex:none;width:120px;font-family:var(--mono);font-size:11px;color:var(--accent);font-weight:600;padding-top:2px}
+  .tl .what{font-size:13px}
+  .tl .what b{color:var(--ink)}
+  .kron{background:var(--navy);color:#fff;border-radius:14px;padding:20px 24px;margin-top:8px}
+  .kron h2{color:#fff;margin-top:0}.kron h2::before{background:var(--steel)}
+  .kron p{color:rgba(255,255,255,.82)}.kron li{color:rgba(255,255,255,.85)}.kron li::before{color:var(--steel)}
+  .kron b{color:#fff}
+  .risk{background:var(--warn-soft);border-radius:12px;padding:13px 18px;margin-top:8px;font-size:12.8px;color:var(--ink2)}
+  .risk b{color:var(--ink)}
+  .foot{margin-top:22px;padding-top:14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:10.5px;color:var(--muted);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;line-height:1.6}
+  .printbtn{position:fixed;bottom:20px;right:20px;background:var(--accent);color:#fff;border:none;border-radius:99px;padding:11px 20px;font-size:13px;font-weight:700;font-family:var(--sans);cursor:pointer;box-shadow:0 10px 26px -8px rgba(12,107,143,.6)}
+  @media print{.printbtn{display:none}body{background:#fff;font-size:10.4pt}@page{size:A4;margin:11mm}.sheet{margin:0;border:none;border-radius:0;box-shadow:none;padding:0;max-width:100%}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  @media (max-width:720px){.lv{grid-template-columns:1fr}.sheet{padding:24px 20px}.tl .when{width:90px}}
+</style>
+<div class="sheet">
+  <div class="top">
+    <div class="brand"><span class="mark"></span>
+      <span class="nm">Эллинг<small>концепт-записка · миграция</small></span></div>
+    <div class="tag">миграция проектов<br>верфи · поставщики · Кронштадт<br>подсветка поверх, не переезд</div>
+  </div>
+
+  <h1>Как <b>перенести текущие проекты</b> в Эллинг — быстро, без ломки существующих систем, включая крупных интеграторов</h1>
+  <p class="lead">У верфи проекты живут в 1С, ЛОЦМАН/КОМПАС, Excel и почте; у поставщика — в CRM, воронках и Excel; у крупного интегратора вроде Кронштадта — в собственной ERP/PLM и закрытом контуре. Записка отвечает: как завести их текущие заказы в Эллинг за день, что копировать, а что подключать, и как масштабировать это на большого игрока.</p>
+
+  <div class="q">Главный принцип: <b>Эллинг садится поверх, а не заменяет</b>. 1С и PLM остаются системами учёта и КД. Миграция — это не «выкачать всё», а импортировать <b>ось заказов</b> и подключить коннекторы к остальному. Отсюда обещание «запуск за день».</div>
+
+  <h2>Три уровня миграции — по глубине</h2>
+  <div class="lv">
+    <div class="lvl"><span class="n">L1 · день 1</span><h3>Реестр</h3>
+      <p>Импорт Excel-реестра текущих заказов и проектов. Авто-маппинг колонок на поля Эллинга, дедуп, отчёт о качестве. Портфель виден сразу.</p>
+      <span class="t">уже в демо (импорт CSV/Excel)</span></div>
+    <div class="lvl"><span class="n">L2 · неделя 1</span><h3>Коннекторы</h3>
+      <p>Подключение 1С (заказы, ИГК, статус ГОЗ), ЛОЦМАН/КОМПАС (чертежи, BOM), почтовый шлюз (входящие ТЗ), ЕИС (тендеры). Данные <b>текут</b>, а не копируются.</p>
+      <span class="t b">Эллинг Агент · есть в демо</span></div>
+    <div class="lvl"><span class="n">L3 · недели 2–4</span><h3>Архив и история</h3>
+      <p>Подтягивание архива исполненных проектов для ИИ-поиска аналогов, извещений ГОСТ 2.503, OCR сканов. Знание становится искомым.</p>
+      <span class="t b">OCR + RAG · бэкенд-трек</span></div>
+  </div>
+
+  <h2>Онбординг-движок — что делает мастер миграции</h2>
+  <ul>
+    <li><b>Приём выгрузок:</b> Excel/CSV/выгрузка 1С, любой кодировки (RU-Windows cp1251 детектится и перечитывается — уже решено в демо).</li>
+    <li><b>Авто-маппинг колонок</b> на поля Эллинга (заказ, заказчик, судно/проект, срок, сумма, ИГК) — предлагает схему, оператор подтверждает.</li>
+    <li><b>Валидация и дедуп</b> по ключу проекта; отчёт о качестве: сколько строк заведено, пропущено, объединено дублей.</li>
+    <li><b>Заведение объектов:</b> заказы, сделки, проекты судов, справочники — с сохранением исходного идентификатора для сверки.</li>
+    <li><b>Параллельная работа</b> в переходный период: Эллинг рядом со старым, без «дня Х». Откат безопасен — коннекторы к 1С/PLM только читают.</li>
+  </ul>
+
+  <h2>Идентичность проекта и дедуп</h2>
+  <p>Ключ проекта при миграции из разных источников (1С ≠ Excel ≠ почта): <b>шифр проекта судна + номер заказа/договора + ИГК</b> (для ГОЗ). По нему объединяются записи об одном заказе из нескольких систем, а не плодятся дубли. Номенклатура СКО маппится на таксономию Эллинга (та же, что в бенчмарках) — один раз, справочником.</p>
+
+  <h2>Что мигрирует, а что подключается</h2>
+  <table>
+    <tr><th>Данные</th><th>Способ</th><th>Почему</th></tr>
+    <tr><td><b>Реестр заказов, сделки, справочники</b></td><td><span class="mv copy">копируем</span></td><td>это ось работы в Эллинге — нужна внутри</td></tr>
+    <tr><td><b>Архив исполненных проектов (для ИИ)</b></td><td><span class="mv copy">копируем + OCR</span></td><td>чтобы искать аналоги по ТЗ</td></tr>
+    <tr><td><b>Раздельный учёт ГОЗ, проводки</b></td><td><span class="mv conn">подключаем</span></td><td>учёт остаётся в 1С; Эллинг отражает статус</td></tr>
+    <tr><td><b>Чертежи, BOM, ревизии КД</b></td><td><span class="mv conn">подключаем</span></td><td>САПР/PLM остаётся у вас, читаем ссылкой</td></tr>
+    <tr><td><b>Тендеры ЕИС, входящие письма</b></td><td><span class="mv conn">подключаем</span></td><td>живой поток, копировать бессмысленно</td></tr>
+  </table>
+
+  <h2>Фазный план по времени</h2>
+  <div class="timeline">
+    <div class="tl"><div class="when">День 1</div><div class="what"><b>L1: импорт реестра.</b> Excel текущих заказов → портфель виден, роли заведены, выбран пресет сегмента (производитель СКО / судовой агент / ПКБ).</div></div>
+    <div class="tl"><div class="when">Неделя 1</div><div class="what"><b>L2: коннекторы.</b> 1С + почта + ЛОЦМАН + ЕИС. Живые данные текут в ось заказа; статусные звонки отмирают.</div></div>
+    <div class="tl"><div class="when">Недели 2–4</div><div class="what"><b>L3: архив.</b> OCR сканов, извещения, история проектов → ИИ-поиск аналогов и радар закладок работают на ваших данных.</div></div>
+    <div class="tl"><div class="when">Далее</div><div class="what"><b>Мост.</b> Подключение внешних участников (верфь ↔ поставщик) через федерацию нитей заказа.</div></div>
+  </div>
+
+  <div class="kron">
+    <h2>Кейс крупного интегратора — Кронштадт</h2>
+    <p>Крупная вертикально-интегрированная группа: много проектов одновременно, собственная ERP/PLM, закрытый контур, требования ИБ и раздельный учёт ГОЗ. Прямой ручной ввод исключён — миграция промышленная.</p>
+    <ul>
+      <li><b>Коробка on-prem в их контуре</b>, не облако. Данные не покидают периметр; наружу — только Мост к внешним поставщикам (Т2), с фильтрацией.</li>
+      <li><b>Батч-ETL из их ERP/PLM</b> через шлюз/агент: сотни заказов реестром, номенклатура СКО маппится на таксономию Эллинга справочником один раз.</li>
+      <li><b>Пилот на одном дивизионе / серии</b> → отчёт качества миграции → тиражирование на остальные. Не «весь холдинг сразу».</li>
+      <li><b>Раздельный учёт ГОЗ остаётся в их системе</b> — Эллинг отражает статус и вехи, не дублирует бухгалтерию.</li>
+      <li><b>Их поставщики</b> подключаются к нитям заказа через Мост — Кронштадт становится ядром сети (эффект площадки).</li>
+    </ul>
+  </div>
+
+  <div class="risk"><b>Риски и снятие:</b> грязные Excel (кодировки/пустые строки) — детект и отчёт качества; дубли из разных систем — дедуп по ключу проекта; сопротивление — параллельная работа без «дня Х»; закрытый контур — офлайн-миграция подписанными пакетами; масштаб холдинга — фазный пилот, а не «всё сразу».</div>
+
+  <div class="foot">
+    <span>Эллинг · концепт-записка · миграция проектов · СПб · 2026</span>
+    <span>демо: alexkashin29.github.io/elling-demo · @alexanderandrk</span>
+  </div>
+</div>
+<button class="printbtn" onclick="window.print()">Сохранить в PDF ↧</button>
+
+</html>
