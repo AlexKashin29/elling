@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Эллинг — операционная система заказа для судостроения: трекер, CRM проектных продаж и инженерная база знаний с ИИ. Один лист для знакомства.">
+<title>Эллинг — операционная система заказа для судостроения</title>
+<style>
+  :root{
+    --bg:#EEF1F4; --paper:#FFFFFF; --panel2:#F5F7FA;
+    --ink:#17242F; --ink2:#465866; --muted:#7A8894;
+    --line:#DCE3E9; --line2:#E7ECF1;
+    --accent:#C94F08; --accent-soft:#FBE9DD;
+    --navy:#1F3A50; --navy-soft:#E7EDF3;
+    --good:#2E7D32; --risk:#B3261E; --steel:#0E7C93;
+    --mono:"Cascadia Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",-apple-system,"Helvetica Neue",Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not(.print){--bg:#0D141B;--paper:#141E28;--panel2:#1A2732;--ink:#E4EAF0;--ink2:#AAB7C2;
+      --muted:#788693;--line:#2A3947;--line2:#22303B;--accent:#FF7A33;--accent-soft:#3A2313;
+      --navy:#8FB4D1;--navy-soft:#1C2D3B;--good:#6FBF73;--risk:#E57373;--steel:#3AAFC9;}
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;font-size:14px}
+  .sheet{max-width:860px;margin:22px auto;background:var(--paper);border:1px solid var(--line);border-radius:14px;
+    padding:34px 40px 30px;box-shadow:0 20px 60px -30px rgba(20,35,55,.4)}
+
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding-bottom:18px;border-bottom:2px solid var(--accent)}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand .mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(140deg,#E9691F,#C24309);position:relative;flex:none}
+  .brand .mark::after{content:"";position:absolute;inset:0;border-radius:9px;background:linear-gradient(180deg,transparent 54%,var(--paper) 54%,var(--paper) 66%,transparent 66%)}
+  .brand .nm{font-size:24px;font-weight:800;letter-spacing:-.02em}
+  .brand .nm small{display:block;font-family:var(--mono);font-size:10px;font-weight:400;letter-spacing:.06em;color:var(--muted);margin-top:2px}
+  .contact{text-align:right;font-size:12px;color:var(--ink2);line-height:1.7}
+  .contact a{color:var(--accent);text-decoration:none;font-weight:600}
+  .contact .mono{font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+  .tagline{font-size:19px;font-weight:700;letter-spacing:-.01em;margin:18px 0 4px;color:var(--ink);text-wrap:balance}
+  .tagline b{color:var(--accent)}
+  .subtag{font-size:13.5px;color:var(--ink2);max-width:60em}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}
+  .block h3{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:600}
+  .block p{font-size:13px;color:var(--ink2);margin-bottom:6px}
+  .block p b{color:var(--ink)}
+  ul{list-style:none}
+  ul li{font-size:12.7px;color:var(--ink2);padding:3px 0 3px 15px;position:relative}
+  ul li::before{content:"—";position:absolute;left:0;color:var(--accent)}
+  ul li b{color:var(--ink)}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}
+  .stat{background:var(--panel2);border:1px solid var(--line2);border-radius:10px;padding:11px 12px}
+  .stat .v{font-size:20px;font-weight:800;letter-spacing:-.02em;color:var(--accent)}
+  .stat .l{font-size:10.5px;color:var(--muted);margin-top:3px;line-height:1.35}
+
+  .why{background:var(--navy-soft);border-radius:10px;padding:13px 16px;margin-top:16px}
+  .why b{color:var(--ink)}
+  .why .mono{font-family:var(--mono);font-size:11px;color:var(--steel)}
+
+  .offer{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap;
+    margin-top:18px;padding:15px 18px;border:1px solid var(--accent);border-radius:12px;background:var(--accent-soft)}
+  .offer .big{font-size:16px;font-weight:750;color:var(--ink)}
+  .offer .big span{color:var(--accent)}
+  .offer .sm{font-size:12px;color:var(--ink2);max-width:34em}
+  .cta{display:flex;gap:8px;flex-wrap:wrap}
+  .cta a{font-family:var(--mono);font-size:12px;font-weight:600;text-decoration:none;border-radius:8px;padding:8px 13px;white-space:nowrap}
+  .cta .p{background:var(--accent);color:#fff}
+  .cta .g{background:transparent;color:var(--ink);border:1px solid var(--line)}
+
+  .foot{margin-top:18px;padding-top:12px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;
+    font-family:var(--mono);font-size:10.5px;color:var(--muted);line-height:1.6}
+
+  .printbtn{position:fixed;bottom:20px;right:20px;background:var(--accent);color:#fff;border:none;border-radius:99px;
+    padding:11px 20px;font-size:13px;font-weight:700;font-family:var(--sans);cursor:pointer;box-shadow:0 8px 24px -8px rgba(201,79,8,.6)}
+
+  @media print{
+    .printbtn{display:none}
+    body{background:#fff;font-size:10.4pt}
+    @page{size:A4;margin:11mm}
+    .sheet{margin:0;border:none;border-radius:0;box-shadow:none;padding:0;max-width:100%}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  @media (max-width:640px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <div class="top">
+    <div class="brand">
+      <span class="mark"></span>
+      <span class="nm">Эллинг<small>здесь строится ваш заказ</small></span>
+    </div>
+    <div class="contact">
+      Александр · Санкт-Петербург<br>
+      <a href="https://t.me/alexanderandrk">@alexanderandrk</a><br>
+      <span class="mono">alexkashin29.github.io/elling</span>
+    </div>
+  </div>
+
+  <p class="tagline">Операционная система заказа для судостроения: <b>трекер, CRM проектных продаж и инженерная база знаний с ИИ</b> — в одной оси заказа.</p>
+  <p class="subtag">Для верфей, конструкторских бюро и поставщиков судового комплектующего оборудования. Один заказ — все отделы смотрят на него вместе, статусные звонки отмирают.</p>
+
+  <div class="stats">
+    <div class="stat"><div class="v">30%</div><div class="l">информации теряется на каждом стыке отделов</div></div>
+    <div class="stat"><div class="v">4 часа</div><div class="l">ждёт верфь ответа — а оценка ТЗ идёт неделями</div></div>
+    <div class="stat"><div class="v">1–2 года</div><div class="l">до тендера решается судьба сделки «закладкой»</div></div>
+    <div class="stat"><div class="v">−35%</div><div class="l">смещение ручных прогнозов выручки</div></div>
+  </div>
+
+  <div class="grid">
+    <div class="block">
+      <h3>Что это</h3>
+      <ul>
+        <li><b>Ось заказа</b> — путь от тендера до ПНР, все роли на одном экране, ГОЗ-этапы и приёмка ВП из коробки</li>
+        <li><b>CRM проектных продаж</b> — проекты судов, тендеры ЕИС, радар закладок «вашу позицию перезаложили», честный прогноз</li>
+        <li><b>Инженерная база знаний</b> — OCR сканов, ИИ-поиск аналогов по ТЗ, чертежи DWG в браузере, извещения ГОСТ 2.503, сроки РМРС</li>
+        <li><b>Просчёт с SLA, снабжение и ПП 719, портал заказчика/ВП</b> — рабочий MVP, 13 модулей</li>
+      </ul>
+    </div>
+    <div class="block">
+      <h3>Почему мы, а не Jira или Excel</h3>
+      <p>Наш конкурент — не Jira, а <b>Excel, почта и телефон</b>. Generic-трекер требует, чтобы завод описал себя сам, — это месяцы внедрения. У нас <b>отрасль уже описана</b>: запуск за день.</p>
+      <ul>
+        <li>Допущен в закрытый контур / ОПК — Jira ушла и запрещена на КИИ</li>
+        <li>ГОЗ 275-ФЗ: ИГК, этапы и приёмка ВП, дедлайны ЕИС ГОЗ</li>
+        <li>Единственный «трекер + CRM + инженерная БЗ» в РФ</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="block">
+      <h3>Почему сейчас</h3>
+      <ul>
+        <li><b>Рынок:</b> ~500 судов до 2035, локализация ПП 719 грузит ~540 поставщиков СКО</li>
+        <li><b>Вакуум:</b> Jira ушла, ниша «путь заказа + CRM + БЗ» пуста</li>
+        <li><b>Технология:</b> русские LLM + OCR делают 20 лет архивов искомыми — в закрытом контуре</li>
+      </ul>
+    </div>
+    <div class="block">
+      <h3>Встраивается, не ломает</h3>
+      <ul>
+        <li><b>«Эллинг Агент»:</b> обмен с 1С от 7.7 до ERP, раздельный учёт ГОЗ остаётся в 1С</li>
+        <li>Почтовый шлюз для любого Outlook, автозагрузка тендеров ЕИС</li>
+        <li>Облако — или коробка в закрытом контуре: Astra Linux, Postgres Pro</li>
+        <li>Импорт вашего реестра заказов из Excel — за день</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="why">
+    <span class="mono">ФОРМУЛА ЦЕННОСТИ</span><br>
+    <b>Эллинг = операционная система заказа, где отрасль уже описана.</b> Клиент получает за день онбординга то, что на Jira собирается полгода интегратором за миллионы, — и чего в Яндекс Трекере не собрать вообще.
+  </div>
+
+  <div class="offer">
+    <div>
+      <div class="big">Дизайн-партнёрство: <span>−50% на два года</span> · только 5 компаний</div>
+      <div class="sm">Внедрение силами нашей команды, прямое влияние на дорожную карту. Начинаем с часового разговора о ваших процессах — это исследование, не продажа.</div>
+    </div>
+    <div class="cta">
+      <a class="p" href="https://alexkashin29.github.io/elling-demo/">Живое демо</a>
+      <a class="g" href="https://alexkashin29.github.io/elling/">Питч</a>
+      <a class="g" href="https://t.me/alexanderandrk">Написать</a>
+    </div>
+  </div>
+
+  <div class="foot">
+    <span>Эллинг · операционная система заказа для судостроения · Санкт-Петербург</span>
+    <span>демо: alexkashin29.github.io/elling-demo · @alexanderandrk</span>
+  </div>
+
+</div>
+
+<button class="printbtn" onclick="window.print()">Сохранить в PDF ↧</button>
+</body>
+</html>
