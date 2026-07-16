@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Эллинг — операционная система заказа для судостроения. Инвест- и партнёрский пакет: демо, питч, дорожная карта, статус и оффер.">
+<title>Эллинг — инвест- и партнёрский пакет</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F4F4F6; --panel:#FFFFFF; --panel2:#F4F5F7;
+    --ink:#141A20; --ink2:#48586A; --muted:#78848F;
+    --line:#E3E7EC; --line2:#ECEFF3;
+    --accent:#E24A0C; --accent-soft:#FDE7DA;
+    --navy:#1F3A50; --navy-soft:#E7EDF3; --good:#2E7D32; --good-soft:#E6F0E6; --steel:#0E7C93;
+    --sh:0 1px 2px rgba(16,24,40,.05),0 4px 14px -3px rgba(16,24,40,.09);
+    --sh-lg:0 14px 34px -10px rgba(16,24,40,.18);
+    --sans:'Onest','Segoe UI',-apple-system,sans-serif;
+    --mono:"Cascadia Mono",Consolas,monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--bg:#0E151C;--panel:#161F29;--panel2:#1B2632;--ink:#E7EDF3;--ink2:#AAB7C2;--muted:#7A8894;
+      --line:#26343F;--line2:#1E2A36;--accent:#FF7A33;--accent-soft:#38230F;--navy:#8FB4D1;--navy-soft:#1C2D3B;
+      --good:#6FBF73;--good-soft:#17301C;--steel:#3AAFC9;--sh:0 1px 2px rgba(0,0,0,.4),0 6px 18px -4px rgba(0,0,0,.55);--sh-lg:0 18px 42px -10px rgba(0,0,0,.75);}
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;font-size:15.5px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:920px;margin:0 auto;padding:0 24px 90px}
+
+  header{padding:52px 0 26px;display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+  .brand{display:flex;align-items:center;gap:13px}
+  .brand .mark{width:38px;height:38px;border-radius:11px;background:var(--accent);position:relative;flex:none;box-shadow:0 4px 14px -3px color-mix(in srgb,var(--accent) 55%,transparent)}
+  .brand .mark::after{content:"";position:absolute;inset:0;border-radius:11px;background:linear-gradient(180deg,transparent 54%,var(--bg) 54%,var(--bg) 66%,transparent 66%)}
+  .brand h1{font-size:27px;font-weight:800;letter-spacing:-.025em}
+  .brand small{display:block;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:1px}
+  .head-r{text-align:right;font-size:12.5px;color:var(--ink2);line-height:1.7}
+  .head-r a{color:var(--accent);text-decoration:none;font-weight:600}
+  .head-r .tag{font-family:var(--mono);font-size:11px;color:var(--muted)}
+
+  .lede{font-size:19px;font-weight:600;color:var(--ink);letter-spacing:-.015em;margin:26px 0 6px;max-width:24em;text-wrap:balance}
+  .lede b{color:var(--accent)}
+  .sub{font-size:15px;color:var(--ink2);max-width:44em}
+
+  .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+  .chips span{font-size:12.5px;font-weight:600;color:var(--good);background:var(--good-soft);border-radius:99px;padding:5px 13px}
+
+  h2{font-size:13px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:38px 0 14px;font-weight:600}
+
+  .links{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media(max-width:720px){.links{grid-template-columns:1fr 1fr}}
+  @media(max-width:480px){.links{grid-template-columns:1fr}}
+  .lk{display:block;background:var(--panel);border:1px solid var(--line2);border-radius:14px;padding:16px 18px;text-decoration:none;color:var(--ink);box-shadow:var(--sh);transition:box-shadow .2s,border-color .2s}
+  .lk:hover{box-shadow:var(--sh-lg);border-color:var(--line)}
+  .lk .t{font-weight:700;font-size:15.5px;letter-spacing:-.01em}
+  .lk .u{font-family:var(--mono);font-size:10.5px;color:var(--steel);margin-top:4px;word-break:break-all}
+  .lk .d{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.45}
+  .lk.primary{border-color:var(--accent);background:var(--accent-soft)}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:680px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line2);border-radius:16px;padding:18px 20px;box-shadow:var(--sh)}
+  .card h3{font-size:15.5px;font-weight:700;letter-spacing:-.01em;margin-bottom:8px}
+  .card p{font-size:13.5px;color:var(--ink2);margin-bottom:6px}
+  .card p:last-child{margin-bottom:0}
+  .card p b{color:var(--ink)}
+  .card .who{font-size:10.5px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600;display:block;margin-bottom:8px}
+
+  .val{border:1px solid var(--line2);border-radius:16px;background:var(--panel);box-shadow:var(--sh);overflow:hidden;margin-top:4px}
+  .val .row{display:flex;gap:14px;padding:14px 18px;border-top:1px solid var(--line2);align-items:flex-start}
+  .val .row:first-child{border-top:none}
+  .val .row .q{font-weight:700;color:var(--ink);font-size:14px;flex:none;width:210px}
+  .val .row .a{font-size:13.5px;color:var(--ink2)}
+  .val .row .a b{color:var(--good)}
+  @media(max-width:600px){.val .row{flex-direction:column;gap:4px}.val .row .q{width:auto}}
+
+  .ask{background:var(--navy-soft);border-radius:16px;padding:18px 22px;margin-top:4px}
+  .ask b{color:var(--ink)}
+  .ask ul{margin:8px 0 0;padding-left:20px;color:var(--ink2)}
+  .ask li{margin-bottom:6px}
+  .ask li b{color:var(--ink)}
+
+  .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:16px}
+  .cta a{font-size:14px;font-weight:600;text-decoration:none;border-radius:11px;padding:11px 20px}
+  .cta .p{background:var(--accent);color:#fff;box-shadow:0 2px 8px -2px color-mix(in srgb,var(--accent) 55%,transparent)}
+  .cta .g{background:var(--panel);color:var(--ink);border:1px solid var(--line);box-shadow:var(--sh)}
+  footer{margin-top:44px;padding-top:18px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="brand"><span class="mark"></span><div><h1>Эллинг</h1><small>операционная система заказа для судостроения</small></div></div>
+    <div class="head-r">Александр · Санкт-Петербург<br><a href="https://t.me/alexanderandrk">@alexanderandrk</a><br><span class="tag">инвест- и партнёрский пакет</span></div>
+  </header>
+
+  <p class="lede">Трекер, CRM проектных продаж и инженерная база знаний с ИИ — <b>в одной оси заказа</b>, для поставщиков судового оборудования.</p>
+  <p class="sub">Рынок вынужденно открылся: Jira ушла, импортозамещение на КИИ, Минпромторг субсидирует внедрение ПО до 50%. Продукта в этом слое нет ни у кого — САПР/PLM (АСКОН) закрывают проектирование, 1С — учёт, а коммерческо-операционный слой поставщика пуст.</p>
+  <div class="chips"><span>MVP работает · 14 модулей</span><span>пройден пен-тест</span><span>фронт+бэк под автотестами</span><span>заявка на грант готова</span><span>публичное демо</span></div>
+
+  <h2>Смотреть — 10 минут</h2>
+  <div class="links">
+    <a class="lk primary" href="https://alexkashin29.github.io/elling-demo/" target="_blank"><div class="t">Живое демо →</div><div class="u">elling-demo</div><div class="d">14 модулей, работает в браузере и с телефона, без установки</div></a>
+    <a class="lk" href="https://alexkashin29.github.io/elling/" target="_blank"><div class="t">Питч-дек</div><div class="u">elling</div><div class="d">10 слайдов: проблема, инсайт, решение, рынок</div></a>
+    <a class="lk" href="https://alexkashin29.github.io/elling/onepager.html" target="_blank"><div class="t">One-pager</div><div class="u">elling/onepager.html</div><div class="d">лист-знакомство, печать в PDF</div></a>
+    <a class="lk" href="https://alexkashin29.github.io/elling/roadmap.html" target="_blank"><div class="t">Дорожная карта</div><div class="u">elling/roadmap.html</div><div class="d">4 квартала: продукт, ИИ-ядро, безопасность, рынок</div></a>
+    <a class="lk" href="https://alexkashin29.github.io/elling/cofounder.html" target="_blank"><div class="t">Со-основательство</div><div class="u">elling/cofounder.html</div><div class="d">ищу технического со-основателя (CTO) на продукт и ИИ-ядро</div></a>
+    <a class="lk" href="https://t.me/alexanderandrk" target="_blank"><div class="t">Написать</div><div class="u">t.me/alexanderandrk</div><div class="d">разговор без обязательств</div></a>
+  </div>
+
+  <h2>Почему сейчас</h2>
+  <div class="grid2">
+    <div class="card"><span class="who">рынок</span><h3>~500 судов до 2035</h3><p>Обновление флота + балльная локализация ПП 719 грузят ~540 поставщиков СКО — нашу ЦА. СКО — 35–75% стоимости судна.</p></div>
+    <div class="card"><span class="who">вакуум</span><h3>Jira ушла, слой пуст</h3><p>Иностранное ПО запрещено на КИИ. САПР/PLM и 1С сильны в проектировании и учёте, но коммерческо-операционного слоя поставщика нет ни у кого.</p></div>
+    <div class="card"><span class="who">деньги</span><h3>Субсидия до 50%</h3><p>Минпромторг субсидирует внедрение российского ПО (до 300 млн ₽). Плюс невозвратный грант ФСИ на ИИ-ядро (до 5 млн ₽).</p></div>
+    <div class="card"><span class="who">технология</span><h3>ИИ дозрел до архивов</h3><p>Открытые русские LLM (T-Pro, GigaChat) + OCR делают 20 лет сканов искомыми — впервые в закрытом контуре, без облаков.</p></div>
+  </div>
+
+  <h2>Проверено по открытым данным</h2>
+  <div class="val">
+    <div class="row"><div class="q">Ниша не занята</div><div class="a"><b>Подтверждено.</b> АСКОН/СиСофт/1С — в проектировании, производстве и учёте, не в коммерческом слое поставщика. Клин свободен.</div></div>
+    <div class="row"><div class="q">В отрасли есть бюджет</div><div class="a"><b>Подтверждено.</b> Субсидия Минпромторга 50%, ФРП, нацпроект «Станки» 117,8 млрд. Барьер — не деньги, а осознание срочности (проверяется в кастдеве).</div></div>
+    <div class="row"><div class="q">Экономика закрытого контура</div><div class="a"><b>Решается вилкой.</b> Аттестация обязательна лишь для КИИ кат. 1; гражданские поставщики (объём) — на SaaS, ОПК — премиум-коробка.</div></div>
+    <div class="row"><div class="q">ИИ-ядро реализуемо</div><div class="a"><b>Стек существует.</b> T-Pro/GigaChat (Apache 2.0), офлайн-RAG (vLLM+Qdrant), OCR штампов — коммерчески. Риск = доменная адаптация (это финансирует грант).</div></div>
+  </div>
+
+  <h2>Что предлагаю</h2>
+  <div class="ask">
+    <b>Три параллельных трека, любой из которых можно поддержать:</b>
+    <ul>
+      <li><b>Дизайн-партнёрство</b> — 5 заводов, −50% на два года, их боли → дорожная карта. Начинаем с часового разговора о процессах.</li>
+      <li><b>Технический со-основатель (CTO)</b> — владелец продукта и ИИ-ядра, настоящая доля. Рынок и продажи — на мне.</li>
+      <li><b>Грант / ранние инвестиции</b> — заявка ФСИ «Старт-ИИ-1» готова к подаче; далее раунд «Старт-2»/ангел по дорожной карте.</li>
+    </ul>
+  </div>
+  <div class="cta">
+    <a class="p" href="https://alexkashin29.github.io/elling-demo/" target="_blank">Открыть демо</a>
+    <a class="g" href="https://t.me/alexanderandrk" target="_blank">Написать в Telegram</a>
+  </div>
+
+  <footer>
+    Эллинг · инвест- и партнёрский пакет · Санкт-Петербург · @alexanderandrk<br>
+    демо: alexkashin29.github.io/elling-demo · питч: alexkashin29.github.io/elling
+  </footer>
+
+</div>
+</body>
+</html>
