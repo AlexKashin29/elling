@@ -1,0 +1,216 @@
+<title>Эллинг — интеграционная архитектура: замысел и что построено</title>
+<style>
+  :root{
+    --bg:#EEF1F4; --panel:#FFFFFF; --panel2:#F7F9FA;
+    --ink:#17242F; --ink2:#465866; --muted:#71818E;
+    --line:#D6DEE4; --line2:#E4EAEF;
+    --accent:#0C6B8F; --accent-soft:#DDEEF5;
+    --navy:#1F3A50; --navy-soft:#E3EBF2;
+    --good:#2E7D32; --risk:#B3261E; --warn:#9A6200;
+    --mono:"Cascadia Mono",Consolas,"Roboto Mono",monospace;
+    --sans:"Segoe UI",-apple-system,"Helvetica Neue",Arial,sans-serif;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{--bg:#0D141B;--panel:#151F29;--panel2:#1A2733;--ink:#E3EAF0;--ink2:#A9B6C1;
+      --muted:#75848F;--line:#2A3947;--line2:#22303C;--accent:#37AECF;--accent-soft:#132C3A;
+      --navy:#8FB4D1;--navy-soft:#1D2E3D;--good:#6FBF73;--risk:#E57373;--warn:#D9A03C;}
+  }
+  :root[data-theme="light"]{--bg:#EEF1F4;--panel:#FFFFFF;--panel2:#F7F9FA;--ink:#17242F;
+    --ink2:#465866;--muted:#71818E;--line:#D6DEE4;--line2:#E4EAEF;--accent:#0C6B8F;
+    --accent-soft:#DDEEF5;--navy:#1F3A50;--navy-soft:#E3EBF2;--good:#2E7D32;--risk:#B3261E;--warn:#9A6200;}
+  :root[data-theme="dark"]{--bg:#0D141B;--panel:#151F29;--panel2:#1A2733;--ink:#E3EAF0;
+    --ink2:#A9B6C1;--muted:#75848F;--line:#2A3947;--line2:#22303C;--accent:#37AECF;
+    --accent-soft:#132C3A;--navy:#8FB4D1;--navy-soft:#1D2E3D;--good:#6FBF73;--risk:#E57373;--warn:#D9A03C;}
+  *{box-sizing:border-box}
+  body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;margin:0;font-size:15.5px}
+  .wrap{max-width:940px;margin:0 auto;padding:0 24px 90px}
+  header{padding:56px 0 30px;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 12px}
+  h1{font-size:clamp(28px,4.5vw,40px);line-height:1.1;margin:0 0 14px;letter-spacing:-.02em;font-weight:750;text-wrap:balance}
+  .lead{font-size:16.5px;color:var(--ink2);max-width:46em;margin:0}
+  .lead b{color:var(--ink)}
+  section{padding-top:44px}
+  .sec-label{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+  h2{font-size:22px;margin:0 0 12px;font-weight:700;letter-spacing:-.015em}
+  h3{font-size:16px;margin:22px 0 8px;font-weight:660}
+  p{max-width:46em;margin:0 0 12px;color:var(--ink2)}
+  p b,li b,td b{color:var(--ink);font-weight:640}
+  ul,ol{max-width:46em;color:var(--ink2);padding-left:22px;margin:0 0 12px}
+  li{margin-bottom:7px}
+  li::marker{color:var(--accent)}
+  code{font-family:var(--mono);font-size:12px;background:var(--panel2);border:1px solid var(--line2);border-radius:5px;padding:1px 6px}
+  .tbl-wrap{overflow-x:auto;margin:16px 0 8px;border:1px solid var(--line);border-radius:10px;background:var(--panel)}
+  table{border-collapse:collapse;width:100%;font-size:13px;min-width:680px}
+  th{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);
+    text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-weight:600;background:var(--panel2)}
+  td{padding:9px 12px;border-bottom:1px solid var(--line2);vertical-align:top;color:var(--ink2)}
+  tr:last-child td{border-bottom:none}
+  td:first-child{color:var(--ink);font-weight:600}
+  .pill{display:inline-block;font-family:var(--mono);font-size:10px;padding:2px 8px;border-radius:99px;border:1px solid var(--line);color:var(--ink2);white-space:nowrap}
+  .pill.rec{color:var(--good);border-color:var(--good);font-weight:700}
+  .pill.warn{color:var(--warn);border-color:var(--warn)}
+  .pill.risk{color:var(--risk);border-color:var(--risk)}
+  .punch{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);
+    border-radius:10px;padding:16px 20px;margin:20px 0;font-size:14.5px;color:var(--ink)}
+  .note{background:var(--navy-soft);border-radius:10px;padding:13px 17px;margin:14px 0;font-size:13.5px;color:var(--ink2);max-width:none}
+  .note b{color:var(--ink)}
+  footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.7}
+</style>
+
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Техническая архитектура · Часть построена и замерена · v2.0 · 17.07.2026</p>
+  <h1>Интеграционная архитектура «Эллинга»</h1>
+  <p class="lead">Как продукт стыкуется с реальным ландшафтом заказчика: 1С трёх поколений, Битрикс24 в облаке и коробке, легаси-почта, существующие базы знаний, ЕИС и ГИСП. <b>Принцип: интегрируемся по протоколам, а не по плагинам, и работаем слоями деградации</b> — продукт полезен даже клиенту, у которого есть только почта.</p>
+</header>
+
+<section id="status">
+  <p class="sec-label">00 · Статус</p>
+  <h2>Что из этого уже построено, а что пока текст</h2>
+  <p>Документ описывал замысел. Ниже — что после реализации <b>работает и проверено тестами</b>,
+  а что осталось намерением. Разделение важнее самой архитектуры: на завод нельзя приносить
+  слайд под видом продукта.</p>
+
+  <table>
+    <tr><th>Механизм</th><th>Статус</th><th>Чем подтверждено</th></tr>
+    <tr><td>1С 8.3 · OData на чтение</td><td><b style="color:var(--good)">построено</b></td>
+        <td>мок-1С с ответом формата <code>/odata/standard.odata/</code>; 42 теста модуля</td></tr>
+    <tr><td>Папка обмена (7.7, самописные, Excel)</td><td><b style="color:var(--good)">построено</b></td>
+        <td>cp1251, брак в выгрузке, повторный импорт</td></tr>
+    <tr><td>Идемпотентный приём</td><td><b style="color:var(--good)">построено</b></td>
+        <td>ключ (источник, внешний №) + хеш; повтор не плодит дублей</td></tr>
+    <tr><td>Синк не стирает работу людей</td><td><b style="color:var(--good)">построено</b></td>
+        <td>сквозной тест: срок из 1С приезжает, лента и риск инженера остаются</td></tr>
+    <tr><td>1С 7.7 · OLE/COM</td><td><b style="color:var(--warn)">заглушка</b></td>
+        <td>нужен Windows и 1С рядом; честно говорит об этом и советует папку обмена</td></tr>
+    <tr><td>DBF read-only (6.0/7.5)</td><td><b style="color:var(--muted)">замысел</b></td>
+        <td>кода нет</td></tr>
+    <tr><td>Почта, САПР, ЕИС, ГИСП</td><td><b style="color:var(--muted)">замысел</b></td>
+        <td>в интерфейсе показаны как витрина и отделены от настоящих источников</td></tr>
+    <tr><td>Проверка на живой 1С заказчика</td><td><b style="color:var(--risk)">не проводилась</b></td>
+        <td>только мок — это главный неснятый риск слоя</td></tr>
+  </table>
+
+  <div class="note">
+    <b>Дыра, которую нашла собственная проверка.</b> Принцип «агент внутри контура сам ходит наружу»
+    выполнен <b>только в коробке</b>. Сейчас приём вызывается из процесса сервера: в облаке до
+    <code>192.168.x</code> завода маршрута нет физически, и кнопка «Забрать заказы» работать не может —
+    таймаутом это не лечится. Обещанной отдельной службы рядом с 1С в коде нет. Граница при этом
+    проведена верно: модуль не зависит от сервера ни одной строкой, поэтому вынос в отдельный процесс —
+    работа на день. Но пока в облаке живут только папка обмена на общем диске и Мост.
+    <b>На демо это незаметно</b>: мок-1С поднимается на <code>127.0.0.1</code>, куда сервер дотягивается.
+  </div>
+
+  <div class="note">
+    <b>Четыре ошибки, найденные замером, а не рассуждением.</b>
+    (1) Сущности 1С называются по-русски — <code>Document_ЗаказПокупателя</code>; без кодирования пути
+    коннектор не заработал бы <b>ни на одном</b> заводе, оставаясь зелёным на латинских именах.
+    (2) 1С чаще <b>висит</b>, чем падает: тесты били по «соединение отвергнуто» (мгновенно), а зависание
+    нашлось только на самодемо — человек ждал 20 секунд.
+    (3) Кириллический хост ронял HTTP-клиент с <code>ordinal not in range(256)</code> — лечится punycode.
+    (4) Суммы 1С приходят как «27 500 000,00»; «27.5 млн» в русском заказе читается как опечатка.
+  </div>
+</section>
+
+<section id="onec">
+  <p class="sec-label">01 · 1С</p>
+  <h2>Три поколения — три механизма</h2>
+  <p>Ключевое решение — <b>«Эллинг Агент»</b>: лёгкая служба Windows, которая ставится в локальную сеть клиента рядом с 1С. Внутрь она говорит с 1С родными механизмами (OLE, OData, файлы), наружу — с нашим сервером по HTTPS (в закрытом контуре — с локальной инсталляцией). Так мы не требуем от клиента открывать 1С в интернет и не зависим от версии его конфигурации.</p>
+  <div class="tbl-wrap"><table>
+    <tr><th>Поколение у клиента</th><th>Механизм</th><th>Факты (валидировано)</th><th>Наш выбор</th></tr>
+    <tr><td>1С 6.0 / 7.5 и DOS-учётки<span style="display:block;font-weight:400;font-size:11px;color:var(--muted)">на многих предприятиях старше 7.7</span></td>
+      <td>прямое чтение DBF-таблиц файловой базы (read-only); регулярная выгрузка CSV/DBF силами клиента</td>
+      <td>OLE/API отсутствуют; базы этих поколений — открытые DBF-файлы, структуры известны и читаются любым XBase-драйвером; писать в них извне нельзя (риск разрушения базы)</td>
+      <td><span class="pill rec">Агент: read-only DBF-коннектор</span> по расписанию, только чтение; запись — никогда; фолбэк — мастер импорта Excel/CSV. Если и этого нет — уровень 0 матрицы деградации (почта + Excel) остаётся полноценным входом</td></tr>
+    <tr><td>1С 7.7<span style="display:block;font-weight:400;font-size:11px;color:var(--muted)">старые заводы</span></td>
+      <td>OLE/COM-автоматизация; файловый обмен DBF/XML через каталог</td>
+      <td>REST/HTTP в 7.7 нет в принципе; OLE — официальный механизм, работает только в LAN; DBF (XBase) — второй живой канал</td>
+      <td><span class="pill rec">Агент по OLE</span> + фолбэк: обмен файлами по расписанию</td></tr>
+    <tr><td>1С 8.2/8.3 + УПП<span style="display:block;font-weight:400;font-size:11px;color:var(--muted)">снята с поддержки: полное прекращение 01.04.2027</span></td>
+      <td>OData (платформа ≥ 8.3.5), HTTP-сервисы (≥ 8.3.5), файловый XML/планы обмена</td>
+      <td>OData — автоматический REST без доработки конфигурации: чтение справочников/документов; ограничения: нет отчётов, слабые $expand, деградация на больших выборках → только инкрементальные малые выборки</td>
+      <td><span class="pill rec">OData на чтение</span> + наша обработка .epf для событий; конфигурация «заморожена» — интеграция переживёт снятие с поддержки, т.к. платформа обновляется</td></tr>
+    <tr><td>1С:ERP / УТ 11 / БП 3<span style="display:block;font-weight:400;font-size:11px;color:var(--muted)">современные</span></td>
+      <td>HTTP-сервисы (кастомный REST), EnterpriseData, OData</td>
+      <td>HTTP-сервисы — полный контроль контракта; типовая практика интеграций CRM↔1С</td>
+      <td><span class="pill rec">HTTP-сервисы</span> — готовое расширение «Эллинг-Обмен», ставится без снятия с поддержки</td></tr>
+  </table></div>
+  <h3>Контракт данных v1 (минимальный и достаточный)</h3>
+  <ul>
+    <li><b>Из 1С к нам:</b> контрагенты, договоры (+ИГК и признак ГОЗ), счета и их оплата, отгрузки/реализации. Инкрементально, раз в 15 минут (агент) или файлом раз в час (7.7-фолбэк).</li>
+    <li><b>От нас в 1С:</b> ничего в фазе 1 (принцип: не трогаем учёт — раздельный учёт ГОЗ живёт в 1С). Фаза 2: черновики заказов покупателя.</li>
+    <li>Идемпотентность по GUID 1С, очередь с retry, журнал обмена виден администратору клиента.</li>
+  </ul>
+</section>
+
+<section id="b24">
+  <p class="sec-label">02 · Битрикс24</p>
+  <h2>Два издания — два способа</h2>
+  <div class="tbl-wrap"><table>
+    <tr><th>Издание у клиента</th><th>Как ставимся</th><th>Технические рамки (валидировано в 1-й волне)</th></tr>
+    <tr><td>Облако Битрикс24</td><td>Тиражное приложение «Эллинг Sync» в Маркете (нужен статус техпартнёра 1С-Битрикс; у клиента должна быть подписка Маркета — без неё REST не работает вообще)</td><td>Лимиты leaky bucket: 2 req/s, всплеск до 50 (Энтерпрайз 5/250); batch до 50 команд; офлайн-события вместо push — переживают недоступность приёмника; обход деградации list-выборок через <code>start=-1</code> + фильтр по ID; retry на 503/429</td></tr>
+    <tr><td>Коробка (в т.ч. закрытый контур)</td><td>Локальное приложение (client_id/secret или вебхуки) — Маркет в коробке без интернета недоступен, поэтому поставляем коннектор вместе с инсталляцией Эллинга, классическая лицензия</td><td>REST-лимиты в коробке настраивает администратор; полный доступ к D7 не используем — остаёмся на REST, чтобы не зависеть от доработок клиентского портала</td></tr>
+  </table></div>
+  <p><b>Сценарий данных:</b> сделки/компании/контакты ↔ заказы Эллинга (двусторонне), задачи — односторонне к нам (производство живёт у нас), виджет-плейсмент «статус заказа» в карточке сделки Б24. Конфликт-резолюция: последняя запись побеждает, лог конфликтов админу.</p>
+</section>
+
+<section id="mail">
+  <p class="sec-label">03 · Почта и календарь</p>
+  <h2>Легаси-почта — главный интеграционный канал MVP</h2>
+  <ul>
+    <li><b>Приём:</b> IMAP (IDLE для мгновенных входящих) — работает с чем угодно, включая почту на своём сервере. Адрес заказа (zakaz-2417@…) + BCC-копирование + пересылка.</li>
+    <li><b>Exchange 2010/2013 on-prem:</b> протокол <b>EWS жив</b> — Microsoft выводит EWS только в Exchange Online (окт. 2026 — апр. 2027), «no changes to EWS in Exchange Server». Аутентификация Basic/NTLM. Через EWS читаем и отправляем, календарь — приглашениями.</li>
+    <li><b>Отправка:</b> SMTP клиента (письма уходят с домена клиента — важно для доверия верфей). Сроки — ICS-приглашения, работают в любом Outlook.</li>
+    <li>MAPI не трогаем — закрытый, тяжёлый, не нужен при живых IMAP/EWS.</li>
+  </ul>
+</section>
+
+<section id="kb">
+  <p class="sec-label">04 · Существующие базы знаний</p>
+  <h2>Миграция: три источника</h2>
+  <div class="tbl-wrap"><table>
+    <tr><th>Откуда</th><th>Механизм (валидировано)</th><th>Что делаем</th></tr>
+    <tr><td>Confluence Server/DC<span style="display:block;font-weight:400;font-size:11px;color:var(--muted)">остался у многих после ухода Atlassian</span></td>
+      <td>REST <code>GET /rest/api/content</code> постранично (body в storage-XHTML); штатный space export XML/HTML; с DC 8.3 — REST-эндпоинт XML-экспорта спейсов</td>
+      <td>Мигратор: страницы → документы БЗ с сохранением иерархии, вложения → файлы, storage-XHTML → наш формат; ссылки между страницами переписываются</td></tr>
+    <tr><td>Сетевые диски<span style="display:block;font-weight:400;font-size:11px;color:var(--muted)">основной «архив» ЦА: папки, сканы TIFF, DWG</span></td>
+      <td>краулер по SMB-шаре через «Эллинг Агент»</td>
+      <td>обход папок → дедупликация по хешам → OCR сканов → распознавание штампов чертежей → карточки документов с автоатрибутами; структура папок сохраняется как первичная навигация</td></tr>
+    <tr><td>Excel-реестры</td><td>мастер импорта с маппингом колонок</td><td>первый экран онбординга: реестры заказов, сертификатов, поставщиков заезжают за день</td></tr>
+  </table></div>
+</section>
+
+<section id="gov">
+  <p class="sec-label">05 · Государственные источники</p>
+  <h2>ЕИС и ГИСП: без парсинга HTML</h2>
+  <ul>
+    <li><b>ЕИС (тендеры):</b> анонимный FTP <b>закрыт с 01.01.2025</b> — теперь официальный канал это СОИ ЕИС (SOAP/XML, нужен токен/ЭП) + раздел «Открытые данные». <span class="pill rec">Решение MVP</span>: партнёрский API агрегатора (Мультитендер/DaMIA — платные API существуют; Тендерплан/Контур берут данные из выгрузок ЕИС + 370 ЭТП) — быстрее и дешевле, чем самим вставать на СОИ. Собственная интеграция СОИ — фаза 3, когда объём оправдает.</li>
+    <li><b>ГИСП / реестр ПП 719:</b> публичный веб-каталог есть (<code>gisp.gov.ru/pp719v2/pub</code>), <b>официального документированного API нет</b>. <span class="pill warn">Решение</span>: изолированный модуль-адаптер (внутренние JSON-эндпоинты каталога, обновление раз в сутки, деградация в «проверь вручную по ссылке» при изменении сайта). Риск нестабильности принят и локализован — это и есть причина, почему фичу не делает никто из больших: им дорого поддерживать, нам это ров.</li>
+  </ul>
+</section>
+
+<section id="matrix">
+  <p class="sec-label">06 · Матрица деградации</p>
+  <h2>Что получает клиент на каждом уровне</h2>
+  <div class="tbl-wrap"><table>
+    <tr><th>Есть у клиента</th><th>Уровень интеграции</th><th>Что работает</th></tr>
+    <tr><td>Только почта</td><td>0 · без установки чего-либо</td><td>адрес заказа, уведомления письмами, ICS-сроки, импорт Excel — продукт уже полезен</td></tr>
+    <tr><td>+ Exchange/IMAP доступ</td><td>1 · почтовый шлюз</td><td>входящие в ленту заказа автоматически, отправка с домена клиента</td></tr>
+    <tr><td>+ 1С любого поколения</td><td>2 · «Эллинг Агент» в LAN</td><td>контрагенты/договоры/счета/отгрузки синхронизированы; ГОЗ-статусы привязаны к ИГК</td></tr>
+    <tr><td>+ Битрикс24</td><td>3 · Sync-приложение</td><td>продажи остаются в Б24, производство у нас, статусы едины</td></tr>
+    <tr><td>+ Confluence/сетевые диски</td><td>4 · миграция БЗ</td><td>архив 20 лет становится искомым: OCR + ИИ-поиск аналогов</td></tr>
+    <tr><td>Современный ИТ-стек</td><td>5 · открытый REST API + вебхуки Эллинга</td><td>нас самих встраивают куда угодно</td></tr>
+  </table></div>
+  <div class="punch"><b>Порядок реализации:</b> фаза 1 — уровни 0–1 + импорт Excel (входной билет адопшена); фаза 1.5–2 — «Эллинг Агент» (OData/HTTP-сервисы, OLE для 7.7), Битрикс24 Sync, тендеры через API агрегатора; фаза 2–3 — миграторы Confluence/дисков, адаптер ГИСП, собственная интеграция СОИ ЕИС, открытый API.</div>
+  <div class="note"><b>Пять выводов:</b> (1) агент в LAN снимает и проблему версий 1С, и страх «открывать учёт в интернет»; (2) учёт не трогаем — мы статусный слой над 1С, а не замена; (3) для коробочных клиентов всё ставится офлайн — ни один канал не требует облака; (4) госисточники берём через агрегаторов, пока объём не оправдает прямые каналы; (5) EWS, OLE и read-only DBF — «скучные» технологии, но именно они открывают 80% реального парка заказчиков, включая учётки старше 1С 7.7; (6) в древние базы никогда не пишем — только читаем: целостность учёта клиента дороже любой фичи.</div>
+</section>
+
+<footer>
+  Эллинг · интеграционная архитектура v1.0 · факты валидированы веб-исследованием 12.07.2026:
+  OData/HTTP-сервисы с платформы 8.3.5 · УПП: полное снятие с поддержки 01.04.2027 · FTP ЕИС закрыт 01.01.2025, канал — СОИ/агрегаторы ·
+  ГИСП: публичного API нет · Confluence: REST /rest/api/content + XML space export · EWS жив on-prem (retirement только Online) ·
+  Битрикс24: leaky bucket 2/50, batch 50, офлайн-события (валидация 1-й волны). Источники — в отчётах папки Исследования.
+</footer>
+
+</div>
